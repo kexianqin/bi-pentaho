@@ -1,0 +1,17 @@
+group 'com.yoyohr'
+version '1.0'
+
+apply plugin: 'java'
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+}
+
+dependencies {
+
+    testCompile 'junit:junit:4.12'
+}
