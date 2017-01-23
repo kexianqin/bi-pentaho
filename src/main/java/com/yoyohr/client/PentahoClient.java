@@ -1,8 +1,6 @@
 package com.yoyohr.client;
 
-import com.yoyohr.client.resource.ActionResource;
-import com.yoyohr.client.resource.DirectoryResource;
-import com.yoyohr.client.resource.UserResource;
+import com.yoyohr.client.resource.*;
 
 import java.util.ArrayList;
 
@@ -29,14 +27,31 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         super(PENTAHO_PROTOCOL, PENTAHO_HOST, PENTAHO_PORT, PENTAHO_USERNAME, PENTAHO_PASSWORD);
     }
 
+    @Override
+    public String backup() throws Exception {
+        Response response = download(getApiBase() + FileResource.FILES_BACKUP);
+        FileResource resource = new FileResource(response);
+        return resource.backup();
+    }
+
     /**
      * 新建文件夹, path参数形如/home:abc
      */
     @Override
     public boolean createDir(String path) throws Exception {
         Response response = put(getApiBase() + DirectoryResource.CREATE_DIR + path);
-        DirectoryResource directoryResource = new DirectoryResource(path, response);
-        return directoryResource.created();
+        DirectoryResource resource = new DirectoryResource(path, response);
+        return resource.created();
+    }
+
+    /**
+     * 读取系统Email配置信息
+     */
+    @Override
+    public String getEmailConfig() throws Exception {
+        Response response = get(getApiBase() + EmailResource.GET_EMAIL_CONFIG);
+        EmailResource resource = new EmailResource(response);
+        return resource.getEmailConfig();
     }
 
 
@@ -46,9 +61,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     @Override
     public ArrayList<String> getUsers() throws Exception {
         Response response = get(getApiBase() + UserResource.LIST_USERS);
-        UserResource userResource = new UserResource(response);
-        System.out.println(userResource.toString());
-        return userResource.getUsers();
+        UserResource resource = new UserResource(response);
+        return resource.getUsers();
     }
 
 
@@ -56,10 +70,20 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
      * 验证当前用户能否执行ActionResource操作。
      */
     @Override
-    public boolean isAuthorized(String actionName) throws Exception {
+    public boolean isActionAuthorized(String actionName) throws Exception {
         Response response = get(getApiBase() + ActionResource.IS_AUTHORIZED + actionName);
-        ActionResource actionResource = new ActionResource(actionName, response);
-        return actionResource.isAuthorized();
+        ActionResource resource = new ActionResource(actionName, response);
+        return resource.isAuthorized();
+    }
+
+    /**
+     * 判断系统Email配置信息是否可用。
+     */
+    @Override
+    public boolean isEmailConfigurationValid() throws Exception {
+        Response response = get(getApiBase() + EmailResource.IS_VALID);
+        EmailResource resource = new EmailResource(response);
+        return resource.isValid();
     }
 
 
@@ -69,15 +93,15 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     public static void main(String[] args) throws Exception {
         PentahoClient client = new PentahoClient();
-        client.getUsers();
-//        System.out.println(client.createDir("/home:123"));
+//        client.getUsers();
+        System.out.println(client.backup());
 //        ArrayList<UserResource> users = client.getUsers();
 //        System.out.println(users.size());
 //        for (UserResource user : users) {
 //            System.out.println("user : " + user);
 //        }
 
-//        System.out.println(client.isAuthorized(ActionResource.REPOSITORY_CREATE));
+//        System.out.println(client.isEmailConfigurationValid());
 
         client.close();
     }

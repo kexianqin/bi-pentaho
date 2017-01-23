@@ -7,7 +7,7 @@ import com.yoyohr.client.Response;
  *
  * @author Leo <jiangwenhua@yoyohr.com>
  */
-public class ActionResource {
+public class ActionResource extends Resource {
 
     public static final String ADMINISTER_SECURITY = "org.pentaho.security.administerSecurity";
 
@@ -20,11 +20,10 @@ public class ActionResource {
     public static final String IS_AUTHORIZED = "/authorization/action/isauthorized?authAction=";
 
     private String name;
-    private Response response;
 
     public ActionResource(String name, Response response) {
+        super(response);
         this.name = name;
-        this.response = response;
     }
 
     public String getName() {

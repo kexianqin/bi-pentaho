@@ -16,7 +16,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -53,13 +56,27 @@ public class BaseHttpClient {
     }
 
     public Response get(String url) throws Exception {
+        return get(url, null);
+    }
+
+    public Response get(String url, String mediaType) throws Exception {
         HttpUriRequest request = new HttpGet(url);
+        if (mediaType != null) {
+            request.setHeader("Accept", mediaType);
+        }
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
-    public Response post(String url) throws Exception {
+    public Response download(String url) throws Exception {
+        HttpUriRequest request = new HttpGet(url);
+        return httpClient.execute(
+                target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
+    }
+
+    public Response post(String url, String mediaType) throws Exception {
         HttpUriRequest request = new HttpPost(url);
+
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
@@ -88,6 +105,39 @@ public class BaseHttpClient {
                 status >= 200 && status < 400 ? 0 : status,
                 entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
         );
+    }
+
+
+    private Response handleResponseAsStream(HttpResponse response) throws IOException {
+        int status = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        if (status >= 200 && status < 400) {
+            InputStream inputStream = entity.getContent();
+            String fileName = "data/SystemBackup.zip";
+            if (inputStream != null) {
+
+                File file = new File(fileName);
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                /**
+                 * 根据实际运行效果 设置缓冲区大小
+                 */
+                byte[] buffer = new byte[2048];
+                int ch = 0;
+                while ((ch = inputStream.read(buffer)) != -1) {
+                    fileOutputStream.write(buffer, 0, ch);
+                }
+                inputStream.close();
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
+            return new Response(0, fileName);
+        } else {
+            return new Response(
+                    status >= 200 && status < 400 ? 0 : status,
+                    entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
+            );
+        }
+
     }
 
     public static void main(String[] args) throws Exception {

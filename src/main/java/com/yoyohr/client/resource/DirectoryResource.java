@@ -7,20 +7,19 @@ import com.yoyohr.client.Response;
  *
  * @author Leo <jiangwenhua@yoyohr.com>
  */
-public class DirectoryResource {
+public class DirectoryResource extends Resource {
 
     public static final String CREATE_DIR = "/repo/dirs";
 
     private String path;
-    private Response response;
 
     public DirectoryResource(String path, Response response) {
+        super(response);
         this.path = path;
-        this.response = response;
     }
 
     public boolean created() {
-        return this.response.getCode() == 0 ? true : false;
+        return response.getCode() == 0 ? true : false;
     }
 
 }
