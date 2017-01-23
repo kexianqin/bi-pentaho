@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Summary
+ * Spring Boot Application Main Class
  *
  * @author Leo <jiangwenhua@yoyohr.com>
  */

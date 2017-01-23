@@ -6,7 +6,7 @@ buildscript {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE')
     }
 }
 
@@ -18,7 +18,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 compileJava {
-    options.encoding = "UTF-8"
+    options.encoding = 'UTF-8'
 }
 
 repositories {
@@ -26,7 +26,20 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile ('org.springframework.boot:spring-boot-starter-web')
+    compile 'mysql:mysql-connector-java:5.1.40',
+            'org.apache.httpcomponents:httpclient:4.5.2',
+            'org.dom4j:dom4j:2.0.0'
+    compile fileTree(dir: 'libs', include: '*.jar')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.jayway.jsonpath:json-path')
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'Gradle',
+                'Main-Class': 'com.yoyohr.bi.web.Application'
+        )
+    }
 }
