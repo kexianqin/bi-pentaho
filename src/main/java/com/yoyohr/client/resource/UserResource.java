@@ -1,7 +1,7 @@
 package com.yoyohr.client.resource;
 
-import com.yoyohr.client.Response;
 import com.yoyohr.client.XmlReader;
+import com.yoyohr.client.Response;
 import org.dom4j.Element;
 
 import java.util.ArrayList;

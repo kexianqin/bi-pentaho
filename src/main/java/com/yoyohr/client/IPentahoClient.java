@@ -1,8 +1,5 @@
 package com.yoyohr.client;
 
-import com.yoyohr.client.resource.UserResource;
-
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -12,17 +9,27 @@ import java.util.ArrayList;
  */
 public interface IPentahoClient {
 
-    String backup() throws Exception;
+    boolean canAdminister() throws Exception;
+
+    String backupSystem() throws Exception;
 
     boolean createDir(String path) throws Exception;
 
+    boolean deleteFiles(String files) throws Exception;
+
+    boolean deleteFilesPermanent(String files) throws Exception;
+
     String getEmailConfig() throws Exception;
+
+    String getFileOrDir(String path) throws Exception;
 
     ArrayList<String> getUsers() throws Exception;
 
     boolean isActionAuthorized(String actionName) throws Exception;
 
     boolean isEmailConfigurationValid() throws Exception;
+
+
 
 
 

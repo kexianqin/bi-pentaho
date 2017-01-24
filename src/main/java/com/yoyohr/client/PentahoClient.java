@@ -3,6 +3,7 @@ package com.yoyohr.client;
 import com.yoyohr.client.resource.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Summary
@@ -19,16 +20,25 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     private static final String PENTAHO_CONTEXT = "pentaho";
 
-
-    private static int CODE_SUCCESS = 0;
-
-
     public PentahoClient() {
         super(PENTAHO_PROTOCOL, PENTAHO_HOST, PENTAHO_PORT, PENTAHO_USERNAME, PENTAHO_PASSWORD);
     }
 
+    /**
+     * 检查当前用户是否为系统管理员
+     */
     @Override
-    public String backup() throws Exception {
+    public boolean canAdminister() throws Exception {
+        Response response = get(getApiBase() + FileResource.FILES_CAN_ADMINISTER);
+        FileResource resource = new FileResource(response);
+        return resource.canAdminister();
+    }
+
+    /**
+     * 备份系统
+     */
+    @Override
+    public String backupSystem() throws Exception {
         Response response = download(getApiBase() + FileResource.FILES_BACKUP);
         FileResource resource = new FileResource(response);
         return resource.backup();
@@ -45,6 +55,31 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     }
 
     /**
+     * 删除文件（将文件移动到trash文件夹）
+     */
+    @Override
+    public boolean deleteFiles(String files) throws Exception {
+        System.out.println(files);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("params", files);
+        Response response = put(getApiBase() + FileResource.FILES_DELETE, params);
+        FileResource resource = new FileResource(response);
+        System.out.println(response.getData());
+        return resource.delete();
+    }
+
+    /**
+     * 彻底删除文件
+     */
+    @Override
+    public boolean deleteFilesPermanent(String files) throws Exception {
+        Response response = put(getApiBase() + FileResource.FILES_DELETE_PERMANENT + files);
+        FileResource resource = new FileResource(response);
+        System.out.println(response.getData());
+        return resource.deletePermanent();
+    }
+
+    /**
      * 读取系统Email配置信息
      */
     @Override
@@ -52,6 +87,16 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         Response response = get(getApiBase() + EmailResource.GET_EMAIL_CONFIG);
         EmailResource resource = new EmailResource(response);
         return resource.getEmailConfig();
+    }
+
+    /**
+     * 读取文件或文件夹,文件名形如:home:admin
+     */
+    @Override
+    public String getFileOrDir(String path) throws Exception {
+        Response response = download(getApiBase() + FileResource.FILES + path);
+        FileResource resource = new FileResource(response);
+        return resource.getFileOrDir();
     }
 
 
@@ -94,7 +139,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     public static void main(String[] args) throws Exception {
         PentahoClient client = new PentahoClient();
 //        client.getUsers();
-        System.out.println(client.backup());
+        System.out.println(client.getFileOrDir(":home:admin:test.cda"));
+//        System.out.println(client.deleteFiles(":admin:test.wcdf"));
 //        ArrayList<UserResource> users = client.getUsers();
 //        System.out.println(users.size());
 //        for (UserResource user : users) {

@@ -1,12 +1,11 @@
 package com.yoyohr.client;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.auth.BasicScheme;
@@ -14,12 +13,15 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -56,10 +58,14 @@ public class BaseHttpClient {
     }
 
     public Response get(String url) throws Exception {
-        return get(url, null);
+        return get(url, null, null);
     }
 
-    public Response get(String url, String mediaType) throws Exception {
+    public Response get(String url, HashMap<String, String> params) throws Exception {
+        return get(url, params, null);
+    }
+
+    public Response get(String url, HashMap<String, String> params, String mediaType) throws Exception {
         HttpUriRequest request = new HttpGet(url);
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
@@ -69,25 +75,52 @@ public class BaseHttpClient {
     }
 
     public Response download(String url) throws Exception {
+        return download(url, null);
+    }
+
+    public Response download(String url, HashMap<String, String> params) throws Exception {
         HttpUriRequest request = new HttpGet(url);
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
 
-    public Response post(String url, String mediaType) throws Exception {
-        HttpUriRequest request = new HttpPost(url);
+    public Response post(String url) throws Exception {
+        return post(url, null, null);
+    }
 
+    public Response post(String url, HashMap<String, String> params) throws Exception {
+
+        return post(url, params, null);
+    }
+
+    public Response post(String url, HashMap<String, String> params, String mediaType) throws Exception {
+        HttpUriRequest request = new HttpPost(url);
+        if (mediaType != null) {
+            request.setHeader("Accept", mediaType);
+        }
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
     public Response put(String url) throws Exception {
-        HttpUriRequest request = new HttpPut(url);
+        return put(url, null);
+    }
+
+    public Response put(String url, HashMap<String, String> params) throws Exception {
+        HttpPut request = new HttpPut(url);
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            params.forEach((String key, String value) ->
+                    nvps.add(new BasicNameValuePair(key, value))
+            );
+            request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
+
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
-    public Response delete(String url) throws Exception {
+    public Response delete(String url, HashMap<String, String> params) throws Exception {
         HttpUriRequest request = new HttpDelete(url);
         return this.httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
@@ -113,9 +146,8 @@ public class BaseHttpClient {
         HttpEntity entity = response.getEntity();
         if (status >= 200 && status < 400) {
             InputStream inputStream = entity.getContent();
-            String fileName = "data/SystemBackup.zip";
+            String fileName = getFileName(response);
             if (inputStream != null) {
-
                 File file = new File(fileName);
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
                 /**
@@ -138,6 +170,21 @@ public class BaseHttpClient {
             );
         }
 
+    }
+
+    private String getFileName(HttpResponse response) {
+        Header contentDispositionHeader = response.getFirstHeader("Content-Disposition");
+        String filename = null;
+        if (contentDispositionHeader != null) {
+            HeaderElement[] values = contentDispositionHeader.getElements();
+            if (values.length == 1) {
+                NameValuePair param = values[0].getParameterByName("filename");
+                if (param != null) {
+                    filename = param.getValue();
+                }
+            }
+        }
+        return filename;
     }
 
     public static void main(String[] args) throws Exception {
