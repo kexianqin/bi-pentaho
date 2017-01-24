@@ -23,6 +23,8 @@ public interface IPentahoClient {
 
     String getFileOrDir(String path) throws Exception;
 
+    String getSchedulerJobs() throws Exception;
+
     ArrayList<String> getUsers() throws Exception;
 
     boolean isActionAuthorized(String actionName) throws Exception;

@@ -99,6 +99,13 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         return resource.getFileOrDir();
     }
 
+    @Override
+    public String getSchedulerJobs() throws Exception {
+        Response response = get(getApiBase() + SchedulerResource.SCHEDULER_GET_JOBS);
+        SchedulerResource resource = new SchedulerResource(response);
+        return resource.getJobs();
+    }
+
 
     /**
      * 读取用户列表
@@ -139,7 +146,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     public static void main(String[] args) throws Exception {
         PentahoClient client = new PentahoClient();
 //        client.getUsers();
-        System.out.println(client.getFileOrDir(":home:admin:test.cda"));
+        System.out.println(client.getSchedulerJobs());
+//        System.out.println(client.getFileOrDir(":home:admin:test.cda"));
 //        System.out.println(client.deleteFiles(":admin:test.wcdf"));
 //        ArrayList<UserResource> users = client.getUsers();
 //        System.out.println(users.size());
