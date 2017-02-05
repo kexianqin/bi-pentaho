@@ -1,13 +1,13 @@
 package com.yoyohr.client.resource;
 
-import com.yoyohr.client.XmlReader;
 import com.yoyohr.client.Response;
-import org.dom4j.Document;
+import com.yoyohr.client.XmlReader;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,7 +21,7 @@ public class UserResource {
 
     private Response response;
 
-    private ArrayList<String> users;
+    private List<String> users;
 
     public UserResource(Response response) throws IOException, DocumentException {
         this.response = response;
@@ -36,17 +36,17 @@ public class UserResource {
         }
     }
 
-    public ArrayList<String> getUsers() {
+    public List<String> getUsers() {
         return users;
     }
 
     @Override
     public String toString() {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         for (String user : users) {
-            stringBuffer.append(user);
-            stringBuffer.append("\n");
+            stringBuilder.append(user);
+            stringBuilder.append("\n");
         }
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
 }
