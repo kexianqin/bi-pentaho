@@ -2,8 +2,11 @@ package com.yoyohr.client.resource;
 
 import com.yoyohr.client.XmlReader;
 import com.yoyohr.client.Response;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -20,7 +23,7 @@ public class UserResource {
 
     private ArrayList<String> users;
 
-    public UserResource(Response response) throws Exception {
+    public UserResource(Response response) throws IOException, DocumentException {
         this.response = response;
         users = new ArrayList<>();
         if (response.getCode() == 0) {

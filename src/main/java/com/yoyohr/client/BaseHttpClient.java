@@ -21,7 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -57,15 +57,15 @@ public class BaseHttpClient {
         context.setAuthCache(authCache);
     }
 
-    public Response get(String url) throws Exception {
+    public Response get(String url) throws IOException {
         return get(url, null, null);
     }
 
-    public Response get(String url, HashMap<String, String> params) throws Exception {
+    public Response get(String url, Map<String, String> params) throws IOException {
         return get(url, params, null);
     }
 
-    public Response get(String url, HashMap<String, String> params, String mediaType) throws Exception {
+    public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
         HttpUriRequest request = new HttpGet(url);
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
@@ -74,11 +74,11 @@ public class BaseHttpClient {
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
-    public Response download(String url) throws Exception {
+    public Response download(String url) throws IOException {
         return download(url, null);
     }
 
-    public Response download(String url, HashMap<String, String> params) throws Exception {
+    public Response download(String url, Map<String, String> params) throws IOException {
         HttpUriRequest request = new HttpGet(url);
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
@@ -88,12 +88,12 @@ public class BaseHttpClient {
         return post(url, null, null);
     }
 
-    public Response post(String url, HashMap<String, String> params) throws Exception {
+    public Response post(String url, Map<String, String> params) throws Exception {
 
         return post(url, params, null);
     }
 
-    public Response post(String url, HashMap<String, String> params, String mediaType) throws Exception {
+    public Response post(String url, Map<String, String> params, String mediaType) throws IOException {
         HttpUriRequest request = new HttpPost(url);
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
@@ -102,14 +102,14 @@ public class BaseHttpClient {
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
-    public Response put(String url) throws Exception {
+    public Response put(String url) throws IOException {
         return put(url, null);
     }
 
-    public Response put(String url, HashMap<String, String> params) throws Exception {
+    public Response put(String url, Map<String, String> params) throws IOException {
         HttpPut request = new HttpPut(url);
         if (params != null) {
-            ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach((String key, String value) ->
                     nvps.add(new BasicNameValuePair(key, value))
             );
@@ -120,7 +120,7 @@ public class BaseHttpClient {
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
-    public Response delete(String url, HashMap<String, String> params) throws Exception {
+    public Response delete(String url, Map<String, String> params) throws IOException {
         HttpUriRequest request = new HttpDelete(url);
         return this.httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
@@ -185,13 +185,6 @@ public class BaseHttpClient {
             }
         }
         return filename;
-    }
-
-    public static void main(String[] args) throws Exception {
-        BaseHttpClient client = new BaseHttpClient(
-                "http", "192.168.1.125", 8080, "admin", "password");
-        System.out.println(client.get("http://192.168.1.125:8080/pentaho/api/users").toString());
-        client.close();
     }
 
 }

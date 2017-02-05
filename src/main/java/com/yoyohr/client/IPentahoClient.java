@@ -1,6 +1,9 @@
 package com.yoyohr.client;
 
-import java.util.ArrayList;
+import org.dom4j.DocumentException;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 访问Pentaho BA服务
@@ -9,27 +12,27 @@ import java.util.ArrayList;
  */
 public interface IPentahoClient {
 
-    boolean canAdminister() throws Exception;
+    boolean canAdminister() throws IOException;
 
-    String backupSystem() throws Exception;
+    String backupSystem() throws IOException;
 
-    boolean createDir(String path) throws Exception;
+    boolean createDir(String path) throws IOException;
 
-    boolean deleteFiles(String files) throws Exception;
+    boolean deleteFiles(String files) throws IOException;
 
-    boolean deleteFilesPermanent(String files) throws Exception;
+    boolean deleteFilesPermanent(String files) throws IOException;
 
-    String getEmailConfig() throws Exception;
+    String getEmailConfig() throws IOException;
 
-    String getFileOrDir(String path) throws Exception;
+    String getFileOrDir(String path) throws IOException;
 
-    String getSchedulerJobs() throws Exception;
+    String getSchedulerJobs() throws IOException;
 
-    ArrayList<String> getUsers() throws Exception;
+    List<String> getUsers() throws IOException, DocumentException;
 
-    boolean isActionAuthorized(String actionName) throws Exception;
+    boolean isActionAuthorized(String actionName) throws IOException;
 
-    boolean isEmailConfigurationValid() throws Exception;
+    boolean isEmailConfigurationValid() throws IOException;
 
 
 
