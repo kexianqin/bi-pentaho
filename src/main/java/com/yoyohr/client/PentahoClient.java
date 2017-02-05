@@ -3,6 +3,8 @@ package com.yoyohr.client;
 import com.yoyohr.client.resource.*;
 import com.yoyohr.utils.PropertiesReader;
 import org.dom4j.DocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import java.util.List;
  * @author Leo <jiangwenhua@yoyohr.com>
  */
 public class PentahoClient extends BaseHttpClient implements IPentahoClient {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String PENTAHO_PROTOCOL = PropertiesReader.getValue("pentaho.protocol");
     private static final String PENTAHO_HOST = PropertiesReader.getValue("pentaho.host");
@@ -146,11 +150,4 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     private String getApiBase() {
         return this.target.toURI() + "/" + PENTAHO_CONTEXT + "/api";
     }
-
-    public static void main(String[] args) throws Exception {
-        PentahoClient client = new PentahoClient();
-        System.out.println(client.getUsers());
-        client.close();
-    }
-
 }
