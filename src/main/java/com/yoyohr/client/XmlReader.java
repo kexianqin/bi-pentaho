@@ -36,15 +36,4 @@ public class XmlReader {
 
     }
 
-    public static void main(String[] args) throws IOException, DocumentException {
-
-
-        String xmlStr = "<users><user>admin</user><user>jiangwenhua</user></users>";
-        XmlReader reader = new XmlReader(xmlStr);
-        //iterate through child elements of root
-        for (Iterator i = reader.root.elementIterator(); i.hasNext(); ) {
-            Element element = (Element) i.next();
-            System.out.println("element.getName(): " + element.getName() + "element.getStringValue(): " + element.getStringValue());
-        }
-    }
 }

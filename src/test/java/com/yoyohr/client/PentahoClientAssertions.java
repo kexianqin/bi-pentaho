@@ -42,7 +42,7 @@ public class PentahoClientAssertions extends AbstractAssertions {
     public void test_get_users() {
         try {
             assertThat(client.getUsers()).isInstanceOf(ArrayList.class).contains("admin").contains
-                    ("jiangwenhua");
+                    ("pentaho");
         } catch (Exception e) {
             e.printStackTrace();
         }
