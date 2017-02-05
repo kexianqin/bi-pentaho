@@ -14,6 +14,8 @@ public class AbstractAssertions {
     protected static final Logger logger = LoggerFactory.getLogger("[ERROR MESSAGE]");
     protected static final Logger log = LoggerFactory.getLogger("\n");
 
+    public AbstractAssertions() {}
+
     /**
      * log error message if one wants to see it "live".
      */

@@ -7,8 +7,6 @@ import org.dom4j.io.SAXReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Iterator;
-
 
 /**
  * Summary
@@ -21,19 +19,18 @@ public class XmlReader {
     private Document document;
     private Element root;
 
+    public XmlReader(String xml) throws IOException, DocumentException {
+        saxReader = new SAXReader();
+        document = saxReader.read(new ByteArrayInputStream(xml.getBytes(BaseHttpClient.DEFAULT_CHARSET)));
+        root = document.getRootElement();
+    }
+
     public Document getDocument() {
         return document;
     }
 
     public Element getRoot() {
         return root;
-    }
-
-    public XmlReader(String xml) throws IOException, DocumentException {
-        saxReader = new SAXReader();
-        document = saxReader.read(new ByteArrayInputStream(xml.getBytes(BaseHttpClient.DEFAULT_CHARSET)));
-        root = document.getRootElement();
-
     }
 
 }

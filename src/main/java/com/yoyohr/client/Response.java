@@ -1,7 +1,5 @@
 package com.yoyohr.client;
 
-import java.io.InputStream;
-
 /**
  * Summary
  *
@@ -12,11 +10,6 @@ public class Response {
     private String data;
 
     public Response(int code, String data) {
-        this.code = code;
-        this.data = data;
-    }
-
-    public Response(int code, String data, InputStream inputStream) {
         this.code = code;
         this.data = data;
     }

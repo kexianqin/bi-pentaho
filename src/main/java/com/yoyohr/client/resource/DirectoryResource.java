@@ -18,6 +18,10 @@ public class DirectoryResource extends Resource {
         this.path = path;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public boolean created() {
         return response.getCode() == 0 ? true : false;
     }
