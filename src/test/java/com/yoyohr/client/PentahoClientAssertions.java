@@ -28,7 +28,7 @@ public class PentahoClientAssertions extends AbstractAssertions {
         try {
             assertThat(client.canAdminister()).isTrue();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -44,7 +44,7 @@ public class PentahoClientAssertions extends AbstractAssertions {
             assertThat(client.getUsers()).isInstanceOf(ArrayList.class).contains("admin").contains
                     ("pentaho");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 

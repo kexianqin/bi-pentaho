@@ -15,6 +15,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +32,8 @@ import java.util.Map;
  * @author Leo <jiangwenhua@yoyohr.com>
  */
 public class BaseHttpClient {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final String DEFAULT_CHARSET = "UTF-8";
 
@@ -84,11 +88,11 @@ public class BaseHttpClient {
                 target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
 
-    public Response post(String url) throws Exception {
+    public Response post(String url) throws IOException {
         return post(url, null, null);
     }
 
-    public Response post(String url, Map<String, String> params) throws Exception {
+    public Response post(String url, Map<String, String> params) throws IOException {
 
         return post(url, params, null);
     }
@@ -154,7 +158,7 @@ public class BaseHttpClient {
                  * 根据实际运行效果 设置缓冲区大小
                  */
                 byte[] buffer = new byte[2048];
-                int ch = 0;
+                int ch;
                 while ((ch = inputStream.read(buffer)) != -1) {
                     fileOutputStream.write(buffer, 0, ch);
                 }

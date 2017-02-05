@@ -3,8 +3,6 @@ package com.yoyohr.client;
 import com.yoyohr.client.resource.*;
 import com.yoyohr.utils.PropertiesReader;
 import org.dom4j.DocumentException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,8 +15,6 @@ import java.util.List;
  */
 public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private static final String PENTAHO_PROTOCOL = PropertiesReader.getValue("pentaho.protocol");
     private static final String PENTAHO_HOST = PropertiesReader.getValue("pentaho.host");
     private static final int PENTAHO_PORT = Integer.parseInt(PropertiesReader.getValue("pentaho.port"));
@@ -26,7 +22,6 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     private static final String PENTAHO_PASSWORD = PropertiesReader.getValue("pentaho.password");
 
     private static final String PENTAHO_CONTEXT = PropertiesReader.getValue("pentaho.context");
-    ;
 
     public PentahoClient() {
         super(PENTAHO_PROTOCOL, PENTAHO_HOST, PENTAHO_PORT, PENTAHO_USERNAME, PENTAHO_PASSWORD);
@@ -67,12 +62,12 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
      */
     @Override
     public boolean deleteFiles(String files) throws IOException {
-        System.out.println(files);
+        logger.info(files);
         HashMap<String, String> params = new HashMap<>();
         params.put("params", files);
         Response response = put(getApiBase() + FileResource.FILES_DELETE, params);
         FileResource resource = new FileResource(response);
-        System.out.println(response.getData());
+        logger.info(response.getData());
         return resource.delete();
     }
 
@@ -83,7 +78,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     public boolean deleteFilesPermanent(String files) throws IOException {
         Response response = put(getApiBase() + FileResource.FILES_DELETE_PERMANENT + files);
         FileResource resource = new FileResource(response);
-        System.out.println(response.getData());
+        logger.info(response.getData());
         return resource.deletePermanent();
     }
 
