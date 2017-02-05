@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 public class UserController {
 
-    private static final String template = "Hello, %s!";
+    private static final String TEMPLATE = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public User index(@RequestParam(value = "name", defaultValue = "World") String name) {
         return new User(counter.incrementAndGet(),
-                String.format(template, name));
+                String.format(TEMPLATE, name));
     }
 }
