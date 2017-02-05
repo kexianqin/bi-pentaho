@@ -31,10 +31,6 @@ public class PropertiesReader {
         }
     }
 
-    private PropertiesReader() {
-        throw new IllegalAccessError("Utility class");
-    }
-
     /**
      * 读取属性文件中相应键的值
      *
