@@ -1,5 +1,8 @@
 package com.yoyohr.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -10,23 +13,39 @@ import java.util.Properties;
  */
 public class PropertiesReader {
 
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesReader.class);
+
     private static String filePath = "env.properties";
 
     private static Properties properties = new Properties();
 
     static {
-        try {
-            if (System.getProperty("config") != null) {
-                filePath = System.getProperty("config");
-            }
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(filePath));
-            properties.load(inputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        } catch (IOException e) {
-            System.exit(-1);
+        FileInputStream fis = null;
+        if (System.getProperty("config") != null) {
+            filePath = System.getProperty("config");
         }
+        try {
+            fis = new FileInputStream(filePath);
+            InputStream inputStream = new BufferedInputStream(fis);
+            properties.load(inputStream);
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private PropertiesReader() {
+        throw new IllegalAccessError("Utility class");
     }
 
     /**
@@ -45,18 +64,25 @@ public class PropertiesReader {
      * @param filePath 属性文件路径
      * @param key      键名
      */
-    public static String readValue(String filePath, String key) {
+    public static String readValue(String filePath, String key) throws IOException {
         Properties props = new Properties();
+        FileInputStream fis = null;
+        String value = null;
         try {
-            InputStream in = new BufferedInputStream(new FileInputStream(filePath));
+            fis = new FileInputStream(filePath);
+            InputStream in = new BufferedInputStream(fis);
             props.load(in);
-            String value = props.getProperty(key);
-            System.out.println(key + "键的值是：" + value);
-            return value;
+            in.close();
+            value = props.getProperty(key);
+            logger.info(key + "键的值是：" + value);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            logger.error(e.getMessage());
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
         }
+        return value;
     }
 
     /**
@@ -65,25 +91,29 @@ public class PropertiesReader {
      * @param key   键名
      * @param value 键值
      */
-    public static void writeProperties(String key, String value) {
+    public static void writeProperties(String key, String value) throws IOException {
         FileInputStream fis = null;
+        FileOutputStream fos = null;
         try {
             fis = new FileInputStream(filePath);
             properties.load(new BufferedInputStream(fis));
             // 调用 HashTable 的方法 put，使用 getProperty 方法提供并行性。
             // 强制要求为属性的键和值使用字符串。返回值是 HashTable 调用 put 的结果。
-            OutputStream fos = new FileOutputStream(filePath);
+            fos = new FileOutputStream(filePath);
             properties.setProperty(key, value);
             // 以适合使用 load 方法加载到 Properties 表中的格式，
             // 将此 Properties 表中的属性列表（键和元素对）写入输出流
             properties.store(fos, "Update '" + key + "' value");
         } catch (IOException e) {
-            System.err.println("属性文件更新错误");
+            logger.error("属性文件更新错误");
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+            if (fos != null) {
+                fos.close();
+            }
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(properties.toString());
     }
 
 }
