@@ -1,6 +1,6 @@
-package com.yoyohr.bi.web.controllers;
+package com.yoyohr.bi.web.controller;
 
-import com.yoyohr.bi.beans.User;
+import com.yoyohr.bi.bean.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -17,7 +17,7 @@ public class ActionResource extends Resource {
 
     public static final String REPOSITORY_READ = "org.pentaho.repository.read";
 
-    public static final String IS_AUTHORIZED = "/authorization/action/isauthorized?authAction=";
+    public static final String IS_AUTHORIZED = "/api/authorization/action/isauthorized?authAction=";
 
     private String name;
 

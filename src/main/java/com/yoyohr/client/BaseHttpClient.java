@@ -45,6 +45,10 @@ public class BaseHttpClient {
     protected CloseableHttpClient httpClient;
     protected HttpClientContext context;
 
+    public BaseHttpClient(String protocol, String host, String username, String password) {
+        this(protocol, host, -1, username, password);
+    }
+
     public BaseHttpClient(String protocol, String host, int port, String username, String password) {
         target = new HttpHost(host, port, protocol);
 

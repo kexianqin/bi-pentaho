@@ -1,4 +1,4 @@
-package com.yoyohr.bi.beans;
+package com.yoyohr.bi.bean;
 
 /**
  * Summary

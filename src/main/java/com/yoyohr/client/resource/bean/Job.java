@@ -1,4 +1,4 @@
-package com.yoyohr.client.resource.beans;
+package com.yoyohr.client.resource.bean;
 
 import java.util.Date;
 

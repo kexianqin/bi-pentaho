@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class FileResource extends Resource {
 
-    public static final String FILES = "/repo/files/";
+    public static final String FILES = "/api/repo/files/";
 
     public static final String FILES_CAN_ADMINISTER = FILES + "canAdminister";
 
@@ -21,7 +21,7 @@ public class FileResource extends Resource {
 
     public static final String FILES_DELETE = FILES + "delete";
 
-    public static final String FILES_DELETE_PERMANENT = FILES + "/deletepermanent";
+    public static final String FILES_DELETE_PERMANENT = FILES + "deletepermanent";
 
     public static final String FILES_PROPERTIES = FILES + "properties";
 

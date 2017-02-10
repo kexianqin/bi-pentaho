@@ -1,12 +1,12 @@
 group 'com.yoyohr'
-version '1.0'
+version '0.1.0'
 
 buildscript {
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
     }
     dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE')
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE')
     }
 }
 
@@ -37,6 +37,8 @@ dependencies {
 }
 
 jar {
+    baseName = 'youpin-bi-service'
+    version =  '0.1.0'
     manifest {
         attributes(
                 'Implementation-Title': 'Gradle',

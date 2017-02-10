@@ -1,4 +1,4 @@
-package com.yoyohr.bi.web.controllers;
+package com.yoyohr.bi.web.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

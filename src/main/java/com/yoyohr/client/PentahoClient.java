@@ -1,12 +1,13 @@
 package com.yoyohr.client;
 
 import com.yoyohr.client.resource.*;
-import com.yoyohr.utils.PropertiesReader;
+import com.yoyohr.util.PropertiesReader;
 import org.dom4j.DocumentException;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Summary
@@ -17,14 +18,13 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     private static final String PENTAHO_PROTOCOL = PropertiesReader.getValue("pentaho.protocol");
     private static final String PENTAHO_HOST = PropertiesReader.getValue("pentaho.host");
-    private static final int PENTAHO_PORT = Integer.parseInt(PropertiesReader.getValue("pentaho.port"));
     private static final String PENTAHO_USERNAME = PropertiesReader.getValue("pentaho.username");
     private static final String PENTAHO_PASSWORD = PropertiesReader.getValue("pentaho.password");
 
     private static final String PENTAHO_CONTEXT = PropertiesReader.getValue("pentaho.context");
 
     public PentahoClient() {
-        super(PENTAHO_PROTOCOL, PENTAHO_HOST, PENTAHO_PORT, PENTAHO_USERNAME, PENTAHO_PASSWORD);
+        super(PENTAHO_PROTOCOL, PENTAHO_HOST, PENTAHO_USERNAME, PENTAHO_PASSWORD);
     }
 
     /**
@@ -80,6 +80,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         FileResource resource = new FileResource(response);
         logger.info(response.getData());
         return resource.deletePermanent();
+    }
+
+    /**
+     * 执行MDX查询
+     */
+    @Override
+    public String doQuery(Map params) throws IOException {
+        return null;
     }
 
     /**
@@ -143,6 +151,11 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
 
     private String getApiBase() {
-        return this.target.toURI() + "/" + PENTAHO_CONTEXT + "/api";
+        return this.target.toURI() + "/" + PENTAHO_CONTEXT;
+    }
+
+    public static void main(String[] args) throws IOException, DocumentException {
+        PentahoClient client = new PentahoClient();
+        System.out.println(client.getUsers());
     }
 }

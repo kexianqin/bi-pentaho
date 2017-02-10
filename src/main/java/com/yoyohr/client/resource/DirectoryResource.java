@@ -9,7 +9,7 @@ import com.yoyohr.client.Response;
  */
 public class DirectoryResource extends Resource {
 
-    public static final String CREATE_DIR = "/repo/dirs";
+    public static final String CREATE_DIR = "/api/repo/dirs";
 
     private String path;
 

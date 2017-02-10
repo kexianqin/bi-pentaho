@@ -4,6 +4,7 @@ import org.dom4j.DocumentException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 访问Pentaho BA服务
@@ -21,6 +22,8 @@ public interface IPentahoClient {
     boolean deleteFiles(String files) throws IOException;
 
     boolean deleteFilesPermanent(String files) throws IOException;
+
+    String doQuery(Map params) throws IOException;
 
     String getEmailConfig() throws IOException;
 

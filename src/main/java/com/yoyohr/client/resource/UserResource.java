@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class UserResource {
 
-    public static final String LIST_USERS = "/users";
+    public static final String LIST_USERS = "/api/users";
 
     private Response response;
 

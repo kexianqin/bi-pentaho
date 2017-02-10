@@ -9,7 +9,7 @@ import com.yoyohr.client.Response;
  */
 public class SchedulerResource extends Resource {
 
-    public static final String SCHEDULER = "/scheduler/";
+    public static final String SCHEDULER = "/api/scheduler/";
 
     public static final String SCHEDULER_GET_JOBS = SCHEDULER + "getJobs";
 
