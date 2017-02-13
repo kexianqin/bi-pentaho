@@ -1,8 +1,20 @@
 package com.yoyohr.client;
 
-import com.yoyohr.client.resource.*;
+import com.yoyohr.client.resource.pentaho.*;
 import com.yoyohr.util.PropertiesReader;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClients;
 import org.dom4j.DocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,6 +28,8 @@ import java.util.Map;
  */
 public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
+    private static final Logger logger = LoggerFactory.getLogger(PentahoClient.class);
+
     private static final String PENTAHO_PROTOCOL = PropertiesReader.getValue("pentaho.protocol");
     private static final String PENTAHO_HOST = PropertiesReader.getValue("pentaho.host");
     private static final String PENTAHO_USERNAME = PropertiesReader.getValue("pentaho.username");
@@ -24,7 +38,20 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     private static final String PENTAHO_CONTEXT = PropertiesReader.getValue("pentaho.context");
 
     public PentahoClient() {
-        super(PENTAHO_PROTOCOL, PENTAHO_HOST, PENTAHO_USERNAME, PENTAHO_PASSWORD);
+        logger.info("PentahoClient Constructing...");
+        target = new HttpHost(PENTAHO_HOST, -1, PENTAHO_PROTOCOL);
+
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                new AuthScope(target.getHostName(), target.getPort()),
+                new UsernamePasswordCredentials(PENTAHO_USERNAME, PENTAHO_PASSWORD));
+        httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
+
+        AuthCache authCache = new BasicAuthCache();
+        BasicScheme basicAuth = new BasicScheme();
+        authCache.put(target, basicAuth);
+        context = HttpClientContext.create();
+        context.setAuthCache(authCache);
     }
 
     /**
@@ -151,7 +178,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
 
     private String getApiBase() {
-        return this.target.toURI() + "/" + PENTAHO_CONTEXT;
+        return super.getApiBase(PENTAHO_CONTEXT);
     }
 
     public static void main(String[] args) throws IOException, DocumentException {

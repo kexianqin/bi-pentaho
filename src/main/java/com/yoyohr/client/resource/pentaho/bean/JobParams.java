@@ -1,4 +1,4 @@
-package com.yoyohr.client.resource.bean;
+package com.yoyohr.client.resource.pentaho.bean;
 
 /**
  * Summary

@@ -1,22 +1,12 @@
 package com.yoyohr.client;
 
 import org.apache.http.*;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,8 +23,6 @@ import java.util.Map;
  */
 public class BaseHttpClient {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
-
     public static final String DEFAULT_CHARSET = "UTF-8";
 
     public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
@@ -43,27 +31,8 @@ public class BaseHttpClient {
 
     protected HttpHost target;
     protected CloseableHttpClient httpClient;
+
     protected HttpClientContext context;
-
-    public BaseHttpClient(String protocol, String host, String username, String password) {
-        this(protocol, host, -1, username, password);
-    }
-
-    public BaseHttpClient(String protocol, String host, int port, String username, String password) {
-        target = new HttpHost(host, port, protocol);
-
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(
-                new AuthScope(target.getHostName(), target.getPort()),
-                new UsernamePasswordCredentials(username, password));
-        httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
-
-        AuthCache authCache = new BasicAuthCache();
-        BasicScheme basicAuth = new BasicScheme();
-        authCache.put(target, basicAuth);
-        context = HttpClientContext.create();
-        context.setAuthCache(authCache);
-    }
 
     public Response get(String url) throws IOException {
         return get(url, null, null);
@@ -193,6 +162,10 @@ public class BaseHttpClient {
             }
         }
         return filename;
+    }
+
+    protected String getApiBase(String context) {
+        return this.target.toURI() + "/" + context;
     }
 
 }

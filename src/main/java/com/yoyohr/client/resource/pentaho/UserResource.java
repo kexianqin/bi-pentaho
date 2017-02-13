@@ -1,4 +1,4 @@
-package com.yoyohr.client.resource;
+package com.yoyohr.client.resource.pentaho;
 
 import com.yoyohr.client.Response;
 import com.yoyohr.client.XmlReader;
