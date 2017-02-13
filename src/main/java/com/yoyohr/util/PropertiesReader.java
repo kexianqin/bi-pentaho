@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 public class PropertiesReader {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertiesReader.class);
+    private static final Logger log = LoggerFactory.getLogger(PropertiesReader.class);
 
     private static String filePath = "env.properties";
 
@@ -27,7 +27,7 @@ public class PropertiesReader {
              InputStream inputStream = new BufferedInputStream(fis)) {
             properties.load(inputStream);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -54,9 +54,9 @@ public class PropertiesReader {
              InputStream in = new BufferedInputStream(fis)) {
             props.load(in);
             value = props.getProperty(key);
-            logger.info(key + "键的值是：" + value);
+            log.info(key + "键的值是：" + value);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return value;
     }
@@ -78,7 +78,7 @@ public class PropertiesReader {
             // 将此 Properties 表中的属性列表（键和元素对）写入输出流
             properties.store(fos, "Update '" + key + "' value");
         } catch (IOException e) {
-            logger.error("属性文件更新错误", e);
+            log.error("属性文件更新错误", e);
         }
     }
 

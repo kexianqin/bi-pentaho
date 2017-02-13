@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Leo <jiangwenhua@yoyohr.com>
  */
-public class Session {
+public class SaikuSession {
 
     private boolean admin;
     private String authId;

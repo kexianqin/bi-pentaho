@@ -1,8 +1,10 @@
 package com.yoyohr.client;
 
-import com.yoyohr.client.resource.saiku.bean.Session;
+import com.yoyohr.client.resource.saiku.bean.SaikuConnection;
+import com.yoyohr.client.resource.saiku.bean.SaikuSession;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 访问Saiku Server的客户端
@@ -11,6 +13,8 @@ import java.io.IOException;
  */
 public interface ISaikuClient {
 
-    Session getRestSaikuSession() throws IOException;
+    List<SaikuConnection> getRestOlapConnections() throws IOException;
+
+    SaikuSession getRestSaikuSession() throws IOException;
 
 }

@@ -1,7 +1,10 @@
 package com.yoyohr.client;
 
+import com.yoyohr.client.resource.saiku.BaseResource;
+import com.yoyohr.client.resource.saiku.OlapDiscoverResource;
 import com.yoyohr.client.resource.saiku.SessionResource;
-import com.yoyohr.client.resource.saiku.bean.Session;
+import com.yoyohr.client.resource.saiku.bean.SaikuConnection;
+import com.yoyohr.client.resource.saiku.bean.SaikuSession;
 import com.yoyohr.util.PropertiesReader;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
@@ -16,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Summary
@@ -24,7 +28,7 @@ import java.net.URISyntaxException;
  */
 public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(SaikuClient.class);
+    private static final Logger log = LoggerFactory.getLogger(SaikuClient.class);
 
     private static final String SAIKU_PROTOCOL = PropertiesReader.getValue("saiku.protocol");
     private static final String SAIKU_HOST = PropertiesReader.getValue("saiku.host");
@@ -33,10 +37,12 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
     public static final String SAIKU_CONTEXT = PropertiesReader.getValue("saiku.context");
 
-    private static CookieStore cookieStore;
+    private CookieStore cookieStore;
+
+    private SaikuSession saikuSession;
 
     public SaikuClient() throws IOException, URISyntaxException {
-        logger.info("SaikuClient Constructing...");
+        log.info("SaikuClient Constructing...");
         target = new HttpHost(SAIKU_HOST, -1, SAIKU_PROTOCOL);
         cookieStore = new BasicCookieStore();
         httpClient = HttpClients.custom()
@@ -47,28 +53,36 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
 
     @Override
-    public Session getRestSaikuSession() throws IOException {
-        Response response = get(getApiBase() + SessionResource.REST_SAIKU_SESSION);
+    public List<SaikuConnection> getRestOlapConnections() throws IOException {
+        Response response = get(getApiUri(saikuSession.getUsername() + "/" + OlapDiscoverResource.OLAP_DISCOVER));
+        OlapDiscoverResource resource = new OlapDiscoverResource(response);
+        return resource.getRestOlapConnections();
+    }
+
+    @Override
+    public SaikuSession getRestSaikuSession() throws IOException {
+        Response response = get(getApiUri(SessionResource.SESSION));
         SessionResource resource = new SessionResource(response);
-        logger.info(resource.getResponse().getData());
+        log.info(resource.getResponse().getData());
         return resource.getRestSaikuSession();
     }
 
     private void setCookies() throws IOException, URISyntaxException {
         HttpUriRequest login = RequestBuilder.post()
-                .setUri(new URI(getApiBase() + SessionResource.REST_SAIKU_SESSION))
+                .setUri(new URI(getApiUri(SessionResource.SESSION)))
                 .addParameter("username", SAIKU_USERNAME)
                 .addParameter("password", SAIKU_PASSWORD)
                 .build();
         httpClient.execute(login);
+        saikuSession = getRestSaikuSession();
     }
 
-    private String getApiBase() {
-        return super.getApiBase(SAIKU_CONTEXT);
+    private String getApiUri(String endpoint) {
+        return getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         SaikuClient client = new SaikuClient();
-        client.getRestSaikuSession();
+        log.info(client.getRestOlapConnections().toString());
     }
 }

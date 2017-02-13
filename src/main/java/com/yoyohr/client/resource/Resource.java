@@ -11,7 +11,7 @@ public class Resource {
 
     protected Response response;
 
-    public Resource(Response response){
+    public Resource(Response response) {
         this.setResponse(response);
     }
 

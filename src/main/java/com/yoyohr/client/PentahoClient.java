@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(PentahoClient.class);
+    private static final Logger log = LoggerFactory.getLogger(PentahoClient.class);
 
     private static final String PENTAHO_PROTOCOL = PropertiesReader.getValue("pentaho.protocol");
     private static final String PENTAHO_HOST = PropertiesReader.getValue("pentaho.host");
@@ -38,7 +38,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     private static final String PENTAHO_CONTEXT = PropertiesReader.getValue("pentaho.context");
 
     public PentahoClient() {
-        logger.info("PentahoClient Constructing...");
+        log.info("PentahoClient Constructing...");
         target = new HttpHost(PENTAHO_HOST, -1, PENTAHO_PROTOCOL);
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -89,12 +89,12 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
      */
     @Override
     public boolean deleteFiles(String files) throws IOException {
-        logger.info(files);
+        log.info(files);
         HashMap<String, String> params = new HashMap<>();
         params.put("params", files);
         Response response = put(getApiBase() + FileResource.FILES_DELETE, params);
         FileResource resource = new FileResource(response);
-        logger.info(response.getData());
+        log.info(response.getData());
         return resource.delete();
     }
 
@@ -105,7 +105,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     public boolean deleteFilesPermanent(String files) throws IOException {
         Response response = put(getApiBase() + FileResource.FILES_DELETE_PERMANENT + files);
         FileResource resource = new FileResource(response);
-        logger.info(response.getData());
+        log.info(response.getData());
         return resource.deletePermanent();
     }
 
