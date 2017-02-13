@@ -13,8 +13,19 @@ import java.util.List;
  */
 public interface ISaikuClient {
 
+    /**
+     *  访问https://https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover
+     * @return
+     * @throws IOException
+     */
     List<SaikuConnection> getRestOlapConnections() throws IOException;
 
+    /**
+     *  访问https://pentaho.yoyohr.com/saiku/rest/saiku/session
+     * @return
+     * @throws IOException
+     */
     SaikuSession getRestSaikuSession() throws IOException;
+
 
 }

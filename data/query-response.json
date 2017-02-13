@@ -1,0 +1,70 @@
+{
+  "queryModel": {
+    "axes": {
+      "FILTER": {
+        "mdx": null,
+        "filters": [],
+        "sortOrder": null,
+        "sortEvaluationLiteral": null,
+        "hierarchizeMode": null,
+        "location": "FILTER",
+        "hierarchies": [],
+        "nonEmpty": false,
+        "aggregators": []
+      },
+      "COLUMNS": {
+        "mdx": null,
+        "filters": [],
+        "sortOrder": null,
+        "sortEvaluationLiteral": null,
+        "hierarchizeMode": null,
+        "location": "COLUMNS",
+        "hierarchies": [],
+        "nonEmpty": true,
+        "aggregators": []
+      },
+      "ROWS": {
+        "mdx": null,
+        "filters": [],
+        "sortOrder": null,
+        "sortEvaluationLiteral": null,
+        "hierarchizeMode": null,
+        "location": "ROWS",
+        "hierarchies": [],
+        "nonEmpty": true,
+        "aggregators": []
+      }
+    },
+    "visualTotals": false,
+    "visualTotalsPattern": null,
+    "lowestLevelsOnly": false,
+    "details": {
+      "axis": "COLUMNS",
+      "location": "BOTTOM",
+      "measures": []
+    },
+    "calculatedMeasures": [],
+    "calculatedMembers": []
+  },
+  "cube": {
+    "uniqueName": "[foodmart].[FoodMart].[FoodMart].[HR]",
+    "name": "HR",
+    "connection": "foodmart",
+    "catalog": "FoodMart",
+    "schema": "FoodMart",
+    "caption": null,
+    "visible": false
+  },
+  "mdx": null,
+  "name": "8C37B328-B846-6D7A-9CEC-1CC46A5E1F89",
+  "parameters": {},
+  "plugins": {},
+  "properties": {
+    "org.saiku.query.explain": true,
+    "saiku.olap.query.drillthrough": true,
+    "org.saiku.connection.scenario": false
+  },
+  "metadata": {},
+  "queryType": "OLAP",
+  "type": "QUERYMODEL"
+}

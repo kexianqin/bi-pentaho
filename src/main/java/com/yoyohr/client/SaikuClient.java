@@ -78,11 +78,14 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
     }
 
     private String getApiUri(String endpoint) {
-        return getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;
+        String uri = getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;
+        log.debug("===========" + uri);
+        return uri;
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         SaikuClient client = new SaikuClient();
         log.info(client.getRestOlapConnections().toString());
+        log.info("ok");
     }
 }

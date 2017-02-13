@@ -1,0 +1,55 @@
+{
+  "name": "8C37B328-B846-6D7A-9CEC-1CC46A5E1F89",
+  "queryModel": {
+    "axes": {
+      "FILTER": {
+        "mdx": null,
+        "filters": [],
+        "sortOrder": null,
+        "sortEvaluationLiteral": null,
+        "hierarchizeMode": null,
+        "location": "FILTER",
+        "hierarchies": [],
+        "nonEmpty": false
+      },
+      "COLUMNS": {
+        "mdx": null,
+        "filters": [],
+        "sortOrder": null,
+        "sortEvaluationLiteral": null,
+        "hierarchizeMode": null,
+        "location": "COLUMNS",
+        "hierarchies": [],
+        "nonEmpty": true
+      },
+      "ROWS": {
+        "mdx": null,
+        "filters": [],
+        "sortOrder": null,
+        "sortEvaluationLiteral": null,
+        "hierarchizeMode": null,
+        "location": "ROWS",
+        "hierarchies": [],
+        "nonEmpty": true
+      }
+    },
+    "visualTotals": false,
+    "visualTotalsPattern": null,
+    "lowestLevelsOnly": false,
+    "details": {
+      "axis": "COLUMNS",
+      "location": "BOTTOM",
+      "measures": []
+    },
+    "calculatedMeasures": [],
+    "calculatedMembers": []
+  },
+  "queryType": "OLAP",
+  "type": "QUERYMODEL",
+  "cube": {
+    "connection": "foodmart",
+    "catalog": "FoodMart",
+    "schema": "FoodMart",
+    "name": "HR"
+  }
+}
