@@ -30,6 +30,8 @@ public interface ISaikuClient {
      */
     SaikuCubeMetadata getRestSaikuCubeMetadata(SaikuCube saikuCube) throws IOException;
 
+    SaikuCubeMetadata getRestSaikuCubeMetadata(String saikuCubeUniqueName) throws IOException;
+
 
     /**
      * https://pentaho.yoyohr.com/saiku/rest/saiku/session

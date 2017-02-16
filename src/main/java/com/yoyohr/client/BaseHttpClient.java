@@ -2,7 +2,9 @@ package com.yoyohr.client;
 
 import org.apache.http.*;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -82,7 +84,6 @@ public class BaseHttpClient {
     }
 
     public Response post(String url, Map<String, String> params) throws IOException {
-
         return post(url, params, null);
     }
 
@@ -115,7 +116,6 @@ public class BaseHttpClient {
             );
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
-
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }

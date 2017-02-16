@@ -77,13 +77,18 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
     @Override
     public SaikuCubeMetadata getRestSaikuCubeMetadata(SaikuCube saikuCube) throws IOException {
+        return getRestSaikuCubeMetadata(saikuCube.getUniqueName());
+    }
+
+    @Override
+    public SaikuCubeMetadata getRestSaikuCubeMetadata(String saikuCubeUniqueName) throws IOException {
+
         OlapDiscoverResource resource = new OlapDiscoverResource();
         String requestUri = getApiUri(
-                "/" + saikuSession.getUsername() + resource.getUriOfGetRestCubeMetadata(saikuCube)
+                "/" + saikuSession.getUsername() + resource.getUriOfGetRestCubeMetadata(saikuCubeUniqueName)
         );
         Response response = get(requestUri);
         resource.setResponse(response);
-        log.info(response.getData());
         return resource.parseSaikuCubeMetaData();
     }
 
@@ -92,7 +97,6 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         SessionResource resource = new SessionResource();
         Response response = get(getApiUri(resource.getUriOfGetRestSaikuSession()));
         resource.setResponse(response);
-        log.info(resource.getResponse().getData());
         return resource.parseSaikuSession();
     }
 
@@ -139,8 +143,7 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
     public static void main(String[] args) throws IOException, URISyntaxException, UnanthenticatedException {
         SaikuClient client = new SaikuClient();
-        SaikuConnection saikuConnection = client.refreshRestOlapConnection("youpin_dwh").get(0);
-        SaikuCube saikuCube = saikuConnection.getCatalogs().get(0).getSchemas().get(0).getCubes().get(0);
-        log.info(client.getRestSaikuCubeMetadata(saikuCube).toString());
+        String cubeUniqueName = "[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]";
+        log.info(client.getRestSaikuCubeMetadata(cubeUniqueName).toString());
     }
 }

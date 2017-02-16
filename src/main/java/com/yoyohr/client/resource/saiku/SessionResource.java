@@ -59,7 +59,6 @@ public class SessionResource extends BaseResource {
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = jsonParser.getCurrentName();
             jsonParser.nextToken(); // move to value, or START_OBJECT/START_ARRAY
-            log.info(jsonParser.getText());
             if ("authid".equals(fieldName)) {
                 saikuSession.setAuthId(jsonParser.getValueAsString());
             } else if ("isadmin".equals(fieldName)) {
@@ -69,7 +68,6 @@ public class SessionResource extends BaseResource {
             } else if ("roles".equals(fieldName)) {
                 List<String> roles = new ArrayList<>();
                 while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                    log.info(jsonParser.getText());
                     roles.add(jsonParser.getValueAsString());
                 }
                 saikuSession.setRoles(roles);
