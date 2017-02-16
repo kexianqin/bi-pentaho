@@ -43,7 +43,15 @@ public class BaseHttpClient {
     }
 
     public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
-        HttpUriRequest request = new HttpGet(url);
+        String requestUri = url;
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach(
+                    (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
+            );
+            requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
+        HttpGet request = new HttpGet(requestUri);
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
@@ -56,7 +64,15 @@ public class BaseHttpClient {
     }
 
     public Response download(String url, Map<String, String> params) throws IOException {
-        HttpUriRequest request = new HttpGet(url);
+        String requestUri = url;
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach(
+                    (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
+            );
+            requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
+        HttpGet request = new HttpGet(requestUri);
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
@@ -71,7 +87,14 @@ public class BaseHttpClient {
     }
 
     public Response post(String url, Map<String, String> params, String mediaType) throws IOException {
-        HttpUriRequest request = new HttpPost(url);
+        HttpPost request = new HttpPost(url);
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach((String key, String value) ->
+                    nvps.add(new BasicNameValuePair(key, value))
+            );
+            request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
@@ -87,8 +110,8 @@ public class BaseHttpClient {
         HttpPut request = new HttpPut(url);
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
-            params.forEach((String key, String value) ->
-                    nvps.add(new BasicNameValuePair(key, value))
+            params.forEach(
+                    (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
             );
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
@@ -96,13 +119,6 @@ public class BaseHttpClient {
         return httpClient.execute(
                 target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
-
-    public Response delete(String url, Map<String, String> params) throws IOException {
-        HttpUriRequest request = new HttpDelete(url);
-        return this.httpClient.execute(
-                target, request, (HttpResponse response) -> handleResponseAsString(response), context);
-    }
-
 
     public void close() throws IOException {
         httpClient.close();

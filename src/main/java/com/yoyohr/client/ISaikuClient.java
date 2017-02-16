@@ -1,6 +1,8 @@
 package com.yoyohr.client;
 
 import com.yoyohr.client.resource.saiku.bean.SaikuConnection;
+import com.yoyohr.client.resource.saiku.bean.SaikuCube;
+import com.yoyohr.client.resource.saiku.bean.SaikuCubeMetadata;
 import com.yoyohr.client.resource.saiku.bean.SaikuSession;
 
 import java.io.IOException;
@@ -14,18 +16,35 @@ import java.util.List;
 public interface ISaikuClient {
 
     /**
-     *  访问https://https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover
-     * @return
-     * @throws IOException
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}
+     */
+    List<SaikuConnection> getRestOlapConnection(String connectionName) throws IOException;
+
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover
      */
     List<SaikuConnection> getRestOlapConnections() throws IOException;
 
     /**
-     *  访问https://pentaho.yoyohr.com/saiku/rest/saiku/session
-     * @return
-     * @throws IOException
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/{catalog}/{schema}/{cube}/metadata
+     */
+    SaikuCubeMetadata getRestSaikuCubeMetadata(SaikuCube saikuCube) throws IOException;
+
+
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/session
      */
     SaikuSession getRestSaikuSession() throws IOException;
+
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/refresh
+     */
+    List<SaikuConnection> refreshRestOlapConnection(String connectionName) throws IOException;
+
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/refresh
+     */
+    List<SaikuConnection> refreshRestOlapConnections() throws IOException;
 
 
 }

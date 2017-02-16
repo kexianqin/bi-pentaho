@@ -4,12 +4,12 @@ import com.yoyohr.client.resource.saiku.BaseResource;
 import com.yoyohr.client.resource.saiku.OlapDiscoverResource;
 import com.yoyohr.client.resource.saiku.SessionResource;
 import com.yoyohr.client.resource.saiku.bean.SaikuConnection;
+import com.yoyohr.client.resource.saiku.bean.SaikuCube;
+import com.yoyohr.client.resource.saiku.bean.SaikuCubeMetadata;
 import com.yoyohr.client.resource.saiku.bean.SaikuSession;
 import com.yoyohr.util.PropertiesReader;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,7 +41,7 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
     private SaikuSession saikuSession;
 
-    public SaikuClient() throws IOException, URISyntaxException {
+    public SaikuClient() throws IOException, URISyntaxException, UnanthenticatedException {
         log.info("SaikuClient Constructing...");
         target = new HttpHost(SAIKU_HOST, -1, SAIKU_PROTOCOL);
         cookieStore = new BasicCookieStore();
@@ -53,28 +53,82 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
 
     @Override
+    public List<SaikuConnection> getRestOlapConnection(String connectionName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri(
+                "/" + saikuSession.getUsername() + resource.getUriOfGetRestOlapConnection(connectionName)
+        );
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseOlapConnections();
+
+    }
+
+    @Override
     public List<SaikuConnection> getRestOlapConnections() throws IOException {
-        Response response = get(getApiUri(saikuSession.getUsername() + "/" + OlapDiscoverResource.OLAP_DISCOVER));
-        OlapDiscoverResource resource = new OlapDiscoverResource(response);
-        return resource.getRestOlapConnections();
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri(
+                "/" + saikuSession.getUsername() + resource.getUriOfGetRestOlapConnections()
+        );
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseOlapConnections();
+    }
+
+    @Override
+    public SaikuCubeMetadata getRestSaikuCubeMetadata(SaikuCube saikuCube) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri(
+                "/" + saikuSession.getUsername() + resource.getUriOfGetRestCubeMetadata(saikuCube)
+        );
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        log.info(response.getData());
+        return resource.parseSaikuCubeMetaData();
     }
 
     @Override
     public SaikuSession getRestSaikuSession() throws IOException {
-        Response response = get(getApiUri(SessionResource.SESSION));
-        SessionResource resource = new SessionResource(response);
+        SessionResource resource = new SessionResource();
+        Response response = get(getApiUri(resource.getUriOfGetRestSaikuSession()));
+        resource.setResponse(response);
         log.info(resource.getResponse().getData());
-        return resource.getRestSaikuSession();
+        return resource.parseSaikuSession();
     }
 
-    private void setCookies() throws IOException, URISyntaxException {
-        HttpUriRequest login = RequestBuilder.post()
-                .setUri(new URI(getApiUri(SessionResource.SESSION)))
-                .addParameter("username", SAIKU_USERNAME)
-                .addParameter("password", SAIKU_PASSWORD)
-                .build();
-        httpClient.execute(login);
-        saikuSession = getRestSaikuSession();
+    @Override
+    public List<SaikuConnection> refreshRestOlapConnection(String connectionName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri(
+                "/" + saikuSession.getUsername() + resource.getUriOfRefreshRestOlapConnection(connectionName)
+        );
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseOlapConnections();
+    }
+
+    @Override
+    public List<SaikuConnection> refreshRestOlapConnections() throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri(
+                "/" + saikuSession.getUsername() + resource.getUriOfRefreshRestOlapConnections()
+        );
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseOlapConnections();
+    }
+
+    private void setCookies() throws IOException, URISyntaxException, UnanthenticatedException {
+        String requestUri = getApiUri(SessionResource.SESSION);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("username", SAIKU_USERNAME);
+        params.put("password", SAIKU_PASSWORD);
+        Response response = post(requestUri, params);
+        if (response.getCode() == 0) {
+            saikuSession = getRestSaikuSession();
+        } else {
+            throw new UnanthenticatedException("登录失败");
+        }
     }
 
     private String getApiUri(String endpoint) {
@@ -83,9 +137,10 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         return uri;
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException, UnanthenticatedException {
         SaikuClient client = new SaikuClient();
-        log.info(client.getRestOlapConnections().toString());
-        log.info("ok");
+        SaikuConnection saikuConnection = client.refreshRestOlapConnection("youpin_dwh").get(0);
+        SaikuCube saikuCube = saikuConnection.getCatalogs().get(0).getSchemas().get(0).getCubes().get(0);
+        log.info(client.getRestSaikuCubeMetadata(saikuCube).toString());
     }
 }

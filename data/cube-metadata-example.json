@@ -1,0 +1,1062 @@
+{
+  "dimensions": [
+    {
+      "uniqueName": "[date]",
+      "name": "date",
+      "caption": "date",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[date].[date]",
+          "name": "date",
+          "caption": "date",
+          "dimensionUniqueName": "[date]",
+          "levels": [
+            {
+              "uniqueName": "[date].[date].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[date_key]",
+              "name": "date_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "date_key",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[date_full]",
+              "name": "date_full",
+              "annotations": null,
+              "levelType": null,
+              "caption": "date_full",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[date_long]",
+              "name": "date_long",
+              "annotations": null,
+              "levelType": null,
+              "caption": "date_long",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[date_medium]",
+              "name": "date_medium",
+              "annotations": null,
+              "levelType": null,
+              "caption": "date_medium",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[date_short]",
+              "name": "date_short",
+              "annotations": null,
+              "levelType": null,
+              "caption": "date_short",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[date_value]",
+              "name": "date_value",
+              "annotations": null,
+              "levelType": null,
+              "caption": "date_value",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[day_abbreviation]",
+              "name": "day_abbreviation",
+              "annotations": null,
+              "levelType": null,
+              "caption": "day_abbreviation",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[day_in_month]",
+              "name": "day_in_month",
+              "annotations": null,
+              "levelType": null,
+              "caption": "day_in_month",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[day_in_year]",
+              "name": "day_in_year",
+              "annotations": null,
+              "levelType": null,
+              "caption": "day_in_year",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[day_name]",
+              "name": "day_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "day_name",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[is_first_day_in_month]",
+              "name": "is_first_day_in_month",
+              "annotations": null,
+              "levelType": null,
+              "caption": "is_first_day_in_month",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[is_first_day_in_week]",
+              "name": "is_first_day_in_week",
+              "annotations": null,
+              "levelType": null,
+              "caption": "is_first_day_in_week",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[is_last_day_in_month]",
+              "name": "is_last_day_in_month",
+              "annotations": null,
+              "levelType": null,
+              "caption": "is_last_day_in_month",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[is_last_day_in_week]",
+              "name": "is_last_day_in_week",
+              "annotations": null,
+              "levelType": null,
+              "caption": "is_last_day_in_week",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[month_abbreviation]",
+              "name": "month_abbreviation",
+              "annotations": null,
+              "levelType": null,
+              "caption": "month_abbreviation",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[month_name]",
+              "name": "month_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "month_name",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[month_number]",
+              "name": "month_number",
+              "annotations": null,
+              "levelType": null,
+              "caption": "month_number",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[quarter_name]",
+              "name": "quarter_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "quarter_name",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[quarter_number]",
+              "name": "quarter_number",
+              "annotations": null,
+              "levelType": null,
+              "caption": "quarter_number",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[week_in_month]",
+              "name": "week_in_month",
+              "annotations": null,
+              "levelType": null,
+              "caption": "week_in_month",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[week_in_year]",
+              "name": "week_in_year",
+              "annotations": null,
+              "levelType": null,
+              "caption": "week_in_year",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[year_month_abbreviation]",
+              "name": "year_month_abbreviation",
+              "annotations": null,
+              "levelType": null,
+              "caption": "year_month_abbreviation",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[year_month_number]",
+              "name": "year_month_number",
+              "annotations": null,
+              "levelType": null,
+              "caption": "year_month_number",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[year_quarter]",
+              "name": "year_quarter",
+              "annotations": null,
+              "levelType": null,
+              "caption": "year_quarter",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[year2]",
+              "name": "year2",
+              "annotations": null,
+              "levelType": null,
+              "caption": "year2",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[date].[date].[year4]",
+              "name": "year4",
+              "annotations": null,
+              "levelType": null,
+              "caption": "year4",
+              "hierarchyUniqueName": "[date].[date]",
+              "dimensionUniqueName": "[date]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[date].[date].[All dates]",
+              "name": "All dates",
+              "caption": "All dates",
+              "dimensionUniqueName": "[date]",
+              "description": null,
+              "levelUniqueName": "[date].[date].[(All)]",
+              "hierarchyUniqueName": "[date].[date]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[enterprise]",
+      "name": "enterprise",
+      "caption": "enterprise",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[enterprise].[enterprise]",
+          "name": "enterprise",
+          "caption": "enterprise",
+          "dimensionUniqueName": "[enterprise]",
+          "levels": [
+            {
+              "uniqueName": "[enterprise].[enterprise].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[enterprise].[enterprise]",
+              "dimensionUniqueName": "[enterprise]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[enterprise].[enterprise].[enterprise_key]",
+              "name": "enterprise_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "enterprise_key",
+              "hierarchyUniqueName": "[enterprise].[enterprise]",
+              "dimensionUniqueName": "[enterprise]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[enterprise].[enterprise].[enterprise_name]",
+              "name": "enterprise_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "enterprise_name",
+              "hierarchyUniqueName": "[enterprise].[enterprise]",
+              "dimensionUniqueName": "[enterprise]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[enterprise].[enterprise].[enterprise_address]",
+              "name": "enterprise_address",
+              "annotations": null,
+              "levelType": null,
+              "caption": "enterprise_address",
+              "hierarchyUniqueName": "[enterprise].[enterprise]",
+              "dimensionUniqueName": "[enterprise]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[enterprise].[enterprise].[enterprise_id]",
+              "name": "enterprise_id",
+              "annotations": null,
+              "levelType": null,
+              "caption": "enterprise_id",
+              "hierarchyUniqueName": "[enterprise].[enterprise]",
+              "dimensionUniqueName": "[enterprise]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[enterprise].[enterprise].[All enterprises]",
+              "name": "All enterprises",
+              "caption": "All enterprises",
+              "dimensionUniqueName": "[enterprise]",
+              "description": null,
+              "levelUniqueName": "[enterprise].[enterprise].[(All)]",
+              "hierarchyUniqueName": "[enterprise].[enterprise]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[event]",
+      "name": "event",
+      "caption": "event",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[event].[event]",
+          "name": "event",
+          "caption": "event",
+          "dimensionUniqueName": "[event]",
+          "levels": [
+            {
+              "uniqueName": "[event].[event].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[event].[event]",
+              "dimensionUniqueName": "[event]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[event].[event].[event_key]",
+              "name": "event_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "event_key",
+              "hierarchyUniqueName": "[event].[event]",
+              "dimensionUniqueName": "[event]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[event].[event].[event_id]",
+              "name": "event_id",
+              "annotations": null,
+              "levelType": null,
+              "caption": "event_id",
+              "hierarchyUniqueName": "[event].[event]",
+              "dimensionUniqueName": "[event]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[event].[event].[event_name]",
+              "name": "event_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "event_name",
+              "hierarchyUniqueName": "[event].[event]",
+              "dimensionUniqueName": "[event]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[event].[event].[All events]",
+              "name": "All events",
+              "caption": "All events",
+              "dimensionUniqueName": "[event]",
+              "description": null,
+              "levelUniqueName": "[event].[event].[(All)]",
+              "hierarchyUniqueName": "[event].[event]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[operator]",
+      "name": "operator",
+      "caption": "operator",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[operator].[operator]",
+          "name": "operator",
+          "caption": "operator",
+          "dimensionUniqueName": "[operator]",
+          "levels": [
+            {
+              "uniqueName": "[operator].[operator].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "dimensionUniqueName": "[operator]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[operator].[operator].[operator_key]",
+              "name": "operator_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "operator_key",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "dimensionUniqueName": "[operator]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[operator].[operator].[operator_email]",
+              "name": "operator_email",
+              "annotations": null,
+              "levelType": null,
+              "caption": "operator_email",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "dimensionUniqueName": "[operator]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[operator].[operator].[operator_id]",
+              "name": "operator_id",
+              "annotations": null,
+              "levelType": null,
+              "caption": "operator_id",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "dimensionUniqueName": "[operator]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[operator].[operator].[operator_mobile]",
+              "name": "operator_mobile",
+              "annotations": null,
+              "levelType": null,
+              "caption": "operator_mobile",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "dimensionUniqueName": "[operator]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[operator].[operator].[operator_name]",
+              "name": "operator_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "operator_name",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "dimensionUniqueName": "[operator]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[operator].[operator].[All operators]",
+              "name": "All operators",
+              "caption": "All operators",
+              "dimensionUniqueName": "[operator]",
+              "description": null,
+              "levelUniqueName": "[operator].[operator].[(All)]",
+              "hierarchyUniqueName": "[operator].[operator]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[product]",
+      "name": "product",
+      "caption": "product",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[product].[product]",
+          "name": "product",
+          "caption": "product",
+          "dimensionUniqueName": "[product]",
+          "levels": [
+            {
+              "uniqueName": "[product].[product].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[product].[product]",
+              "dimensionUniqueName": "[product]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[product].[product].[product_key]",
+              "name": "product_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "product_key",
+              "hierarchyUniqueName": "[product].[product]",
+              "dimensionUniqueName": "[product]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[product].[product].[product_id]",
+              "name": "product_id",
+              "annotations": null,
+              "levelType": null,
+              "caption": "product_id",
+              "hierarchyUniqueName": "[product].[product]",
+              "dimensionUniqueName": "[product]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[product].[product].[product_name]",
+              "name": "product_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "product_name",
+              "hierarchyUniqueName": "[product].[product]",
+              "dimensionUniqueName": "[product]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[product].[product].[All products]",
+              "name": "All products",
+              "caption": "All products",
+              "dimensionUniqueName": "[product]",
+              "description": null,
+              "levelUniqueName": "[product].[product].[(All)]",
+              "hierarchyUniqueName": "[product].[product]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[serial_number]",
+      "name": "serial_number",
+      "caption": "serial_number",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[serial_number].[serial_number]",
+          "name": "serial_number",
+          "caption": "serial_number",
+          "dimensionUniqueName": "[serial_number]",
+          "levels": [
+            {
+              "uniqueName": "[serial_number].[serial_number].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[serial_number].[serial_number]",
+              "dimensionUniqueName": "[serial_number]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[serial_number].[serial_number].[serial_number_key]",
+              "name": "serial_number_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "serial_number_key",
+              "hierarchyUniqueName": "[serial_number].[serial_number]",
+              "dimensionUniqueName": "[serial_number]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[serial_number].[serial_number].[serial_number_code]",
+              "name": "serial_number_code",
+              "annotations": null,
+              "levelType": null,
+              "caption": "serial_number_code",
+              "hierarchyUniqueName": "[serial_number].[serial_number]",
+              "dimensionUniqueName": "[serial_number]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[serial_number].[serial_number].[serial_number_id]",
+              "name": "serial_number_id",
+              "annotations": null,
+              "levelType": null,
+              "caption": "serial_number_id",
+              "hierarchyUniqueName": "[serial_number].[serial_number]",
+              "dimensionUniqueName": "[serial_number]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[serial_number].[serial_number].[All serial_numbers]",
+              "name": "All serial_numbers",
+              "caption": "All serial_numbers",
+              "dimensionUniqueName": "[serial_number]",
+              "description": null,
+              "levelUniqueName": "[serial_number].[serial_number].[(All)]",
+              "hierarchyUniqueName": "[serial_number].[serial_number]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[status]",
+      "name": "status",
+      "caption": "status",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[status].[status_key]",
+          "name": "status_key",
+          "caption": "status_key",
+          "dimensionUniqueName": "[status]",
+          "levels": [
+            {
+              "uniqueName": "[status].[status_key].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[status].[status_key]",
+              "dimensionUniqueName": "[status]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[status].[status_key].[status_key]",
+              "name": "status_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "status_key",
+              "hierarchyUniqueName": "[status].[status_key]",
+              "dimensionUniqueName": "[status]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[status].[status_key].[status_id]",
+              "name": "status_id",
+              "annotations": null,
+              "levelType": null,
+              "caption": "status_id",
+              "hierarchyUniqueName": "[status].[status_key]",
+              "dimensionUniqueName": "[status]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[status].[status_key].[status_name]",
+              "name": "status_name",
+              "annotations": null,
+              "levelType": null,
+              "caption": "status_name",
+              "hierarchyUniqueName": "[status].[status_key]",
+              "dimensionUniqueName": "[status]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[status].[status_key].[All status_keys]",
+              "name": "All status_keys",
+              "caption": "All status_keys",
+              "dimensionUniqueName": "[status]",
+              "description": null,
+              "levelUniqueName": "[status].[status_key].[(All)]",
+              "hierarchyUniqueName": "[status].[status_key]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "uniqueName": "[time]",
+      "name": "time",
+      "caption": "time",
+      "description": null,
+      "visible": true,
+      "hierarchies": [
+        {
+          "uniqueName": "[time].[time]",
+          "name": "time",
+          "caption": "time",
+          "dimensionUniqueName": "[time]",
+          "levels": [
+            {
+              "uniqueName": "[time].[time].[(All)]",
+              "name": "(All)",
+              "annotations": null,
+              "levelType": null,
+              "caption": "(All)",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[time_key]",
+              "name": "time_key",
+              "annotations": null,
+              "levelType": null,
+              "caption": "time_key",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[am_pm]",
+              "name": "am_pm",
+              "annotations": null,
+              "levelType": null,
+              "caption": "am_pm",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[hours12]",
+              "name": "hours12",
+              "annotations": null,
+              "levelType": null,
+              "caption": "hours12",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[hours24]",
+              "name": "hours24",
+              "annotations": null,
+              "levelType": null,
+              "caption": "hours24",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[minutes]",
+              "name": "minutes",
+              "annotations": null,
+              "levelType": null,
+              "caption": "minutes",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[seconds]",
+              "name": "seconds",
+              "annotations": null,
+              "levelType": null,
+              "caption": "seconds",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            },
+            {
+              "uniqueName": "[time].[time].[time_value]",
+              "name": "time_value",
+              "annotations": null,
+              "levelType": null,
+              "caption": "time_value",
+              "hierarchyUniqueName": "[time].[time]",
+              "dimensionUniqueName": "[time]",
+              "visible": true,
+              "description": null
+            }
+          ],
+          "description": null,
+          "visible": true,
+          "rootMembers": [
+            {
+              "uniqueName": "[time].[time].[All times]",
+              "name": "All times",
+              "caption": "All times",
+              "dimensionUniqueName": "[time]",
+              "description": null,
+              "levelUniqueName": "[time].[time].[(All)]",
+              "hierarchyUniqueName": "[time].[time]",
+              "calculated": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "uniqueName": "[Measures].[action_date_key]",
+      "name": "action_date_key",
+      "caption": "action_date_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[action_key]",
+      "name": "action_key",
+      "caption": "action_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[action_time_key]",
+      "name": "action_time_key",
+      "caption": "action_time_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[enterprise_key]",
+      "name": "enterprise_key",
+      "caption": "enterprise_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[event_key]",
+      "name": "event_key",
+      "caption": "event_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[id]",
+      "name": "id",
+      "caption": "id",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[operator_key]",
+      "name": "operator_key",
+      "caption": "operator_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[product_key]",
+      "name": "product_key",
+      "caption": "product_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[serial_number_key]",
+      "name": "serial_number_key",
+      "caption": "serial_number_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[status_key]",
+      "name": "status_key",
+      "caption": "status_key",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    },
+    {
+      "uniqueName": "[Measures].[fact_count]",
+      "name": "fact_count",
+      "caption": "fact_count",
+      "dimensionUniqueName": "[Measures]",
+      "description": null,
+      "levelUniqueName": "[Measures].[MeasuresLevel]",
+      "hierarchyUniqueName": "[Measures]",
+      "calculated": false,
+      "measureGroup": "youpin_dwh"
+    }
+  ],
+  "properties": {
+    "org.saiku.query.explain": true,
+    "saiku.olap.query.drillthrough": true,
+    "org.saiku.connection.scenario": false
+  }
+}
