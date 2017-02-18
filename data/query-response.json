@@ -1,70 +1,332 @@
 {
-  "queryModel": {
-    "axes": {
-      "FILTER": {
-        "mdx": null,
-        "filters": [],
-        "sortOrder": null,
-        "sortEvaluationLiteral": null,
-        "hierarchizeMode": null,
-        "location": "FILTER",
-        "hierarchies": [],
-        "nonEmpty": false,
-        "aggregators": []
-      },
-      "COLUMNS": {
-        "mdx": null,
-        "filters": [],
-        "sortOrder": null,
-        "sortEvaluationLiteral": null,
-        "hierarchizeMode": null,
-        "location": "COLUMNS",
-        "hierarchies": [],
-        "nonEmpty": true,
-        "aggregators": []
-      },
-      "ROWS": {
-        "mdx": null,
-        "filters": [],
-        "sortOrder": null,
-        "sortEvaluationLiteral": null,
-        "hierarchizeMode": null,
-        "location": "ROWS",
-        "hierarchies": [],
-        "nonEmpty": true,
-        "aggregators": []
-      }
+    "cellset": [
+        [
+            {
+                "value": "operator_name",
+                "type": "ROW_HEADER_HEADER",
+                "properties": {
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "action_key",
+                "type": "COLUMN_HEADER",
+                "properties": {
+                    "uniquename": "[Measures].[action_key]",
+                    "hierarchy": "[Measures]",
+                    "dimension": "Measures",
+                    "level": "[Measures].[MeasuresLevel]"
+                }
+            }
+        ],
+        [
+            {
+                "valueCell": "肖杨",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[10].[].[10].[15827649453].[肖杨]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "1",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:0",
+                    "raw": "1.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "帅建",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[49].[].[49].[13707156433].[帅建]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "137",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:1",
+                    "raw": "137.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "次雨",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[110].[].[110].[13163332630].[次雨]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "9",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:2",
+                    "raw": "9.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "魏泉",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[210].[hugeroad@foxmail.com].[210].[13971172007].[魏泉]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "25",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:3",
+                    "raw": "25.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "总装",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[217].[].[217].[13320000000].[总装]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "7",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:4",
+                    "raw": "7.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "曾航",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[227].[].[227].[13507149039].[曾航]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "1",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:5",
+                    "raw": "1.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "郭世新",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[232].[433@qq.com].[232].[13667352381].[郭世新]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "4",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:6",
+                    "raw": "4.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "陈玲",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[237].[chenling@yoyohr.com].[237].[15207149292].[陈玲]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "74",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:7",
+                    "raw": "74.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "组装员",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[244].[13800000001@gmail.com].[244].[13800000001].[组装员]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "22",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:8",
+                    "raw": "22.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "质检员",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[245].[13800000002@qq.com].[245].[13800000002].[质检员]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "1",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:9",
+                    "raw": "1.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "18703651966",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[253].[].[253].[18703651966].[18703651966]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "2",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:10",
+                    "raw": "2.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "江小鱼",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[254].[finemen@126.com].[254].[15926286325].[江小鱼]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "11",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:11",
+                    "raw": "11.0"
+                }
+            }
+        ],
+        [
+            {
+                "value": "任小飞",
+                "type": "ROW_HEADER",
+                "properties": {
+                    "uniquename": "[operator].[operator].[255].[187@126.com].[255].[13295800963].[任小飞]",
+                    "hierarchy": "[operator].[operator]",
+                    "dimension": "operator",
+                    "level": "[operator].[operator].[operator_name]"
+                }
+            },
+            {
+                "value": "4",
+                "type": "DATA_CELL",
+                "properties": {
+                    "position": "0:12",
+                    "raw": "4.0"
+                }
+            }
+        ]
+    ],
+    "rowTotalsLists": null,
+    "colTotalsLists": null,
+    "runtime": 15,
+    "error": null,
+    "height": 14,
+    "width": 2,
+    "query": {
+        "queryModel": {
+            "axes": {},
+            "visualTotals": false,
+            "visualTotalsPattern": null,
+            "lowestLevelsOnly": false,
+            "details": null,
+            "calculatedMeasures": [],
+            "calculatedMembers": []
+        },
+        "cube": {
+            "uniqueName": "[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]",
+            "name": "youpin_dwh",
+            "connection": "youpin_dwh",
+            "catalog": "youpin_dwh",
+            "schema": "youpin_dwh",
+            "caption": null,
+            "visible": false
+        },
+        "mdx": "WITH\r\nSET [~ROWS] AS\r\n    {[operator].[operator].[operator_name].Members}\r\nSELECT\r\nNON EMPTY {[Measures].[action_key]} ON COLUMNS,\r\nNON EMPTY [~ROWS] ON ROWS\r\nFROM [youpin_dwh]",
+        "name": "ADCD8856-C485-FDD8-99DA-3325133D49E4",
+        "parameters": {},
+        "plugins": {},
+        "properties": {
+            "saiku.olap.query.automatic_execution": true,
+            "saiku.olap.query.nonempty": true,
+            "saiku.olap.query.nonempty.rows": true,
+            "saiku.olap.query.nonempty.columns": true,
+            "saiku.ui.render.mode": "table",
+            "saiku.olap.query.filter": true,
+            "saiku.olap.result.formatter": "flat",
+            "org.saiku.query.explain": true,
+            "saiku.olap.query.drillthrough": true,
+            "org.saiku.connection.scenario": false
+        },
+        "metadata": {},
+        "queryType": "OLAP",
+        "type": "MDX"
     },
-    "visualTotals": false,
-    "visualTotalsPattern": null,
-    "lowestLevelsOnly": false,
-    "details": {
-      "axis": "COLUMNS",
-      "location": "BOTTOM",
-      "measures": []
-    },
-    "calculatedMeasures": [],
-    "calculatedMembers": []
-  },
-  "cube": {
-    "uniqueName": "[foodmart].[FoodMart].[FoodMart].[HR]",
-    "name": "HR",
-    "connection": "foodmart",
-    "catalog": "FoodMart",
-    "schema": "FoodMart",
-    "caption": null,
-    "visible": false
-  },
-  "mdx": null,
-  "name": "8C37B328-B846-6D7A-9CEC-1CC46A5E1F89",
-  "parameters": {},
-  "plugins": {},
-  "properties": {
-    "org.saiku.query.explain": true,
-    "saiku.olap.query.drillthrough": true,
-    "org.saiku.connection.scenario": false
-  },
-  "metadata": {},
-  "queryType": "OLAP",
-  "type": "QUERYMODEL"
+    "topOffset": 1,
+    "leftOffset": 0
 }

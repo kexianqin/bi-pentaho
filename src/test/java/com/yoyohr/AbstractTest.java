@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Leo <jiangwenhua@yoyohr.com>
  */
-public abstract class AbstractAssertions {
+public abstract class AbstractTest {
 
     static final String ERROR_MESSAGE_FOR_ASSERTION = "{} assertion : {}\n";
     protected static final Logger logger = LoggerFactory.getLogger("[ERROR MESSAGE]");

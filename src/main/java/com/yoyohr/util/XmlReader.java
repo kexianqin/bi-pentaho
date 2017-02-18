@@ -1,5 +1,6 @@
-package com.yoyohr.client;
+package com.yoyohr.util;
 
+import com.yoyohr.client.BaseHttpClient;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

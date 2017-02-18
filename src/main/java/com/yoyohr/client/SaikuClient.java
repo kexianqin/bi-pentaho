@@ -2,11 +2,10 @@ package com.yoyohr.client;
 
 import com.yoyohr.client.resource.saiku.BaseResource;
 import com.yoyohr.client.resource.saiku.OlapDiscoverResource;
+import com.yoyohr.client.resource.saiku.QueryResource;
 import com.yoyohr.client.resource.saiku.SessionResource;
-import com.yoyohr.client.resource.saiku.bean.SaikuConnection;
-import com.yoyohr.client.resource.saiku.bean.SaikuCube;
-import com.yoyohr.client.resource.saiku.bean.SaikuCubeMetadata;
-import com.yoyohr.client.resource.saiku.bean.SaikuSession;
+import com.yoyohr.client.resource.saiku.bean.*;
+import com.yoyohr.client.resource.saiku.query.QueryResult;
 import com.yoyohr.util.PropertiesReader;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
@@ -46,50 +45,9 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         target = new HttpHost(SAIKU_HOST, -1, SAIKU_PROTOCOL);
         cookieStore = new BasicCookieStore();
         httpClient = HttpClients.custom()
-                .setDefaultCookieStore(cookieStore).build();
+            .setDefaultCookieStore(cookieStore).build();
         context = HttpClientContext.create();
         setCookies();
-    }
-
-
-    @Override
-    public List<SaikuConnection> getRestOlapConnection(String connectionName) throws IOException {
-        OlapDiscoverResource resource = new OlapDiscoverResource();
-        String requestUri = getApiUri(
-                "/" + saikuSession.getUsername() + resource.getUriOfGetRestOlapConnection(connectionName)
-        );
-        Response response = get(requestUri);
-        resource.setResponse(response);
-        return resource.parseOlapConnections();
-
-    }
-
-    @Override
-    public List<SaikuConnection> getRestOlapConnections() throws IOException {
-        OlapDiscoverResource resource = new OlapDiscoverResource();
-        String requestUri = getApiUri(
-                "/" + saikuSession.getUsername() + resource.getUriOfGetRestOlapConnections()
-        );
-        Response response = get(requestUri);
-        resource.setResponse(response);
-        return resource.parseOlapConnections();
-    }
-
-    @Override
-    public SaikuCubeMetadata getRestSaikuCubeMetadata(SaikuCube saikuCube) throws IOException {
-        return getRestSaikuCubeMetadata(saikuCube.getUniqueName());
-    }
-
-    @Override
-    public SaikuCubeMetadata getRestSaikuCubeMetadata(String saikuCubeUniqueName) throws IOException {
-
-        OlapDiscoverResource resource = new OlapDiscoverResource();
-        String requestUri = getApiUri(
-                "/" + saikuSession.getUsername() + resource.getUriOfGetRestCubeMetadata(saikuCubeUniqueName)
-        );
-        Response response = get(requestUri);
-        resource.setResponse(response);
-        return resource.parseSaikuCubeMetaData();
     }
 
     @Override
@@ -101,26 +59,174 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
     }
 
     @Override
-    public List<SaikuConnection> refreshRestOlapConnection(String connectionName) throws IOException {
+    public List<SaikuConnection> getRestOlapConnections() throws IOException {
         OlapDiscoverResource resource = new OlapDiscoverResource();
-        String requestUri = getApiUri(
-                "/" + saikuSession.getUsername() + resource.getUriOfRefreshRestOlapConnection(connectionName)
-        );
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestOlapConnections());
         Response response = get(requestUri);
         resource.setResponse(response);
-        return resource.parseOlapConnections();
+        return resource.parseSaikuConnections();
     }
 
     @Override
     public List<SaikuConnection> refreshRestOlapConnections() throws IOException {
         OlapDiscoverResource resource = new OlapDiscoverResource();
-        String requestUri = getApiUri(
-                "/" + saikuSession.getUsername() + resource.getUriOfRefreshRestOlapConnections()
-        );
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfRefreshRestOlapConnections());
         Response response = get(requestUri);
         resource.setResponse(response);
-        return resource.parseOlapConnections();
+        return resource.parseSaikuConnections();
     }
+
+    @Override
+    public List<SaikuConnection> getRestOlapConnection(String connectionName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestOlapConnection(connectionName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuConnections();
+
+    }
+
+    @Override
+    public List<SaikuConnection> refreshRestOlapConnection(String connectionName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfRefreshRestOlapConnection(connectionName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuConnections();
+    }
+
+    @Override
+    public SaikuCubeMetadata getRestSaikuCubeMetadata(String saikuCubeUniqueName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestCubeMetadata(saikuCubeUniqueName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuCubeMetaData();
+    }
+
+    @Override
+    public List<SaikuDimension> getRestSaikuDimensions(String saikuCubeUniqueName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuDimensions(saikuCubeUniqueName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuDimensions();
+    }
+
+    @Override
+    public SaikuDimension getRestSaikuDimension(String saikuCubeUniqueName, String dimensionName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuDimension(saikuCubeUniqueName, dimensionName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuDimension();
+    }
+
+    @Override
+    public List<SaikuHierarchy> getRestSaikuDimensionHierarchies(String saikuCubeUniqueName,
+                                                                 String dimensionName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuDimensionHierarchies(saikuCubeUniqueName, dimensionName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuHierarchies();
+    }
+
+    @Override
+    public List<SaikuLevel> getRestSaikuDimensionHierarchy(String saikuCubeUniqueName,
+                                                           String dimensionName,
+                                                           String hieraychyName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuDimensionHierarchy(saikuCubeUniqueName, dimensionName, hieraychyName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuLevels();
+    }
+
+    @Override
+    public List<SimpleCubeElement> getRestSaikuLevelMembers(String saikuCubeUniqueName,
+                                                            String dimensionName,
+                                                            String hierarchyName,
+                                                            String levelName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuLevelMembers(saikuCubeUniqueName, dimensionName, hierarchyName, levelName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuLevelMembers();
+    }
+
+    @Override
+    public List<SaikuMember> getRestSaikuRootMembers(String saikuCubeUniqueName,
+                                                     String hierarchyName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuRootMembers(saikuCubeUniqueName, hierarchyName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuMembers();
+    }
+
+    @Override
+    public List<SaikuHierarchy> getRestSaikuCubeHierarchies(String saikuCubeUniqueName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuCubeHierarchies(saikuCubeUniqueName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuHierarchies();
+    }
+
+    @Override
+    public List<SaikuMeasure> getRestSaikuCubeMeasures(String saikuCubeUniqueName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuCubeMeasures(saikuCubeUniqueName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuMeasures();
+    }
+
+    @Override
+    public SaikuMember getRestSaikuMember(String saikuCubeUniqueName, String memberName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuMember(saikuCubeUniqueName, memberName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuMember();
+    }
+
+    @Override
+    public List<SaikuMember> getRestSaikuMemberChildren(String saikuCubeUniqueName,
+                                                        String memberName) throws IOException {
+        OlapDiscoverResource resource = new OlapDiscoverResource();
+        String requestUri = getApiUri("/" + saikuSession.getUsername()
+            + resource.getUriOfGetRestSaikuMemberChildren(saikuCubeUniqueName, memberName));
+        Response response = get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuMembers();
+    }
+
+    @Override
+    public QueryResult executeSaikuQuery(String cubeUniqueName, String mdx) throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri = getApiUri(resource.getUriOfExecuteQuery());
+        String queryJson = resource.constructQueryJson(cubeUniqueName, mdx);
+        Response response = postJson(requestUri, queryJson);
+        resource.setResponse(response);
+        return resource.parseQueryResult();
+    }
+
 
     private void setCookies() throws IOException, URISyntaxException, UnanthenticatedException {
         String requestUri = getApiUri(SessionResource.SESSION);
@@ -135,15 +241,19 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         }
     }
 
+    public String executeQuery() throws IOException {
+        String jsonString =
+            "{\"name\":\"ADCD8856-C485-FDD8-99DA-3325133D49E4\",\"queryModel\":{},\"queryType\":\"OLAP\",\"type\":\"MDX\",\"cube\":{\"uniqueName\":\"[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]\",\"name\":\"youpin_dwh\",\"connection\":\"youpin_dwh\",\"catalog\":\"youpin_dwh\",\"schema\":\"youpin_dwh\",\"caption\":null,\"visible\":false},\"mdx\":\"WITH\\r\\nSET [~ROWS] AS\\r\\n    {[operator].[operator].[operator_name].Members}\\r\\nSELECT\\r\\nNON EMPTY {[Measures].[action_key]} ON COLUMNS,\\r\\nNON EMPTY [~ROWS] ON ROWS\\r\\nFROM [youpin_dwh]\",\"parameters\":{},\"plugins\":{},\"properties\":{\"saiku.olap.query.automatic_execution\":true,\"saiku.olap.query.nonempty\":true,\"saiku.olap.query.nonempty.rows\":true,\"saiku.olap.query.nonempty.columns\":true,\"saiku.ui.render.mode\":\"table\",\"saiku.olap.query.filter\":true,\"saiku.olap.result.formatter\":\"flat\",\"org.saiku.query.explain\":true,\"saiku.olap.query.drillthrough\":true,\"org.saiku.connection.scenario\":false},\"metadata\":{}}";
+        String requestUri = "https://pentaho.yoyohr.com/saiku/rest/saiku/api/query/execute";
+        Response reponse = postJson(requestUri, jsonString);
+        return reponse.getData();
+    }
+
     private String getApiUri(String endpoint) {
         String uri = getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;
         log.debug("===========" + uri);
         return uri;
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException, UnanthenticatedException {
-        SaikuClient client = new SaikuClient();
-        String cubeUniqueName = "[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]";
-        log.info(client.getRestSaikuCubeMetadata(cubeUniqueName).toString());
-    }
+
 }

@@ -1,0 +1,31 @@
+{
+    "queryModel": {},
+    "cube": {
+        "uniqueName": "[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]",
+        "name": "youpin_dwh",
+        "connection": "youpin_dwh",
+        "catalog": "youpin_dwh",
+        "schema": "youpin_dwh",
+        "caption": null,
+        "visible": false
+    },
+    "mdx": "WITH\nSET [~ROWS] AS\n    {[operator].[operator].[operator_name].Members}\nSELECT\nNON EMPTY {[Measures].[action_key]} ON COLUMNS,\nNON EMPTY [~ROWS] ON ROWS\nFROM [youpin_dwh]",
+    "name": "7A3B0FE6-2023-7822-8B4F-62FC2FE27BC3",
+    "parameters": {},
+    "plugins": {},
+    "properties": {
+        "saiku.olap.query.automatic_execution": true,
+        "saiku.olap.query.nonempty": true,
+        "saiku.olap.query.nonempty.rows": true,
+        "saiku.olap.query.nonempty.columns": true,
+        "saiku.ui.render.mode": "table",
+        "saiku.olap.query.filter": true,
+        "saiku.olap.result.formatter": "flat",
+        "org.saiku.query.explain": true,
+        "saiku.olap.query.drillthrough": true,
+        "org.saiku.connection.scenario": false
+    },
+    "metadata": {},
+    "queryType": "OLAP",
+    "type": "MDX"
+}
