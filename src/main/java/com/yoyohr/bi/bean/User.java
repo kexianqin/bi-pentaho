@@ -7,8 +7,10 @@ package com.yoyohr.bi.bean;
  */
 public class User {
 
-    private final long id;
-    private final  String name;
+    private long id;
+    private String name;
+
+    public User() {}
 
     public User(long id, String name) {
         this.id = id;

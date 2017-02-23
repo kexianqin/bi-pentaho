@@ -3,7 +3,6 @@ package com.yoyohr.client.resource.saiku;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.yoyohr.client.Response;
 import com.yoyohr.client.resource.saiku.bean.SaikuSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,16 +20,23 @@ public class SessionResource extends BaseResource {
 
     private static final Logger log = LoggerFactory.getLogger(SessionResource.class);
 
-    public static final String SESSION = "session";
+    public static final String SESSION = "/session";
 
     private JsonFactory jsonFactory;
 
     private SaikuSession saikuSession;
 
-    public SessionResource(Response response) {
-        super(response);
+    public SessionResource() {
         jsonFactory = new JsonFactory();
         saikuSession = new SaikuSession();
+    }
+
+    public SaikuSession getSaikuSession() {
+        return saikuSession;
+    }
+
+    public String getUriOfGetRestSaikuSession() {
+        return "/session";
     }
 
     /**
@@ -51,7 +57,7 @@ public class SessionResource extends BaseResource {
      * @return SaikuSession
      * @throws IOException
      */
-    public SaikuSession getRestSaikuSession() throws IOException {
+    public SaikuSession parseSaikuSession() throws IOException {
         parseJson(response.getData());
         return saikuSession;
     }
@@ -62,7 +68,6 @@ public class SessionResource extends BaseResource {
         while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = jsonParser.getCurrentName();
             jsonParser.nextToken(); // move to value, or START_OBJECT/START_ARRAY
-            log.info(jsonParser.getText());
             if ("authid".equals(fieldName)) {
                 saikuSession.setAuthId(jsonParser.getValueAsString());
             } else if ("isadmin".equals(fieldName)) {
@@ -72,7 +77,6 @@ public class SessionResource extends BaseResource {
             } else if ("roles".equals(fieldName)) {
                 List<String> roles = new ArrayList<>();
                 while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                    log.info(jsonParser.getText());
                     roles.add(jsonParser.getValueAsString());
                 }
                 saikuSession.setRoles(roles);

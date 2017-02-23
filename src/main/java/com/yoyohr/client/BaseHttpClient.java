@@ -2,8 +2,12 @@ package com.yoyohr.client;
 
 import org.apache.http.*;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -44,20 +48,29 @@ public class BaseHttpClient {
 
     public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
 
+//        if (params != null) {
+//            ArrayList<NameValuePair> nvps = new ArrayList<>();
+//            params.forEach((String key, String value) ->
+//                    nvps.add(new BasicNameValuePair(key, value))
+//            );
+//            url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));//内容转化为字符串加在url后面
+//                                               //UrlEncodedFormEntity实现httpEntity接口:An entity composed of a list of url-encoded pairs. This is typically useful while sending an HTTP POST request.
+//        }
+//        HttpGet request = new HttpGet(url);
+        String requestUri = url;
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
-            params.forEach((String key, String value) ->
-                    nvps.add(new BasicNameValuePair(key, value))
+            params.forEach(
+                (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
             );
-            url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));//内容转化为字符串加在url后面
-                                               //UrlEncodedFormEntity实现httpEntity接口:An entity composed of a list of url-encoded pairs. This is typically useful while sending an HTTP POST request.
+            requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
-        HttpGet request = new HttpGet(url);
+        HttpGet request = new HttpGet(requestUri);
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
         return httpClient.execute(
-                target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
     public Response download(String url) throws IOException {
@@ -65,9 +78,17 @@ public class BaseHttpClient {
     }
 
     public Response download(String url, Map<String, String> params) throws IOException {
-        HttpUriRequest request = new HttpGet(url);
+        String requestUri = url;
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach(
+                (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
+            );
+            requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
+        HttpGet request = new HttpGet(requestUri);
         return httpClient.execute(
-                target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
+            target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
 
     public Response post(String url) throws IOException {
@@ -75,7 +96,6 @@ public class BaseHttpClient {
     }
 
     public Response post(String url, Map<String, String> params) throws IOException {
-
         return post(url, params, null);
     }
 
@@ -84,7 +104,7 @@ public class BaseHttpClient {
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach((String key, String value) ->
-                    nvps.add(new BasicNameValuePair(key, value))
+                nvps.add(new BasicNameValuePair(key, value))
             );
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
@@ -92,7 +112,15 @@ public class BaseHttpClient {
             request.setHeader("Accept", mediaType);
         }
         return httpClient.execute(
-                target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+    }
+
+    public Response postJson(String url, String jsonString) throws IOException {
+        HttpPost request = new HttpPost(url);
+        request.setHeader("Accept", APPLICATION_JSON_UTF8);
+        request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+        return httpClient.execute(
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
     public Response put(String url) throws IOException {
@@ -103,22 +131,14 @@ public class BaseHttpClient {
         HttpPut request = new HttpPut(url);
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
-            params.forEach((String key, String value) ->
-                    nvps.add(new BasicNameValuePair(key, value))
+            params.forEach(
+                (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
             );
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
-
         return httpClient.execute(
-                target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
-
-    public Response delete(String url, Map<String, String> params) throws IOException {
-        HttpUriRequest request = new HttpDelete(url);
-        return this.httpClient.execute(
-                target, request, (HttpResponse response) -> handleResponseAsString(response), context);
-    }
-
 
     public void close() throws IOException {
         httpClient.close();
@@ -128,8 +148,8 @@ public class BaseHttpClient {
         int status = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
         return new Response(
-                status >= 200 && status < 400 ? 0 : status,
-                entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
+            status >= 200 && status < 400 ? 0 : status,
+            entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
         );
     }
 
@@ -158,8 +178,8 @@ public class BaseHttpClient {
             return new Response(0, fileName);
         } else {
             return new Response(
-                    status >= 200 && status < 400 ? 0 : status,
-                    entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
+                status >= 200 && status < 400 ? 0 : status,
+                entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
             );
         }
 

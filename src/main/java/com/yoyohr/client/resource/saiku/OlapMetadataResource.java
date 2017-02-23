@@ -25,7 +25,8 @@ public class OlapMetadataResource extends BaseResource {
 
 
     public OlapMetadataResource(Response response) throws IOException {
-        super(response);
+        super();
+        this.response = response;
         jsonDecode = new JsonDecode();
     }
 
