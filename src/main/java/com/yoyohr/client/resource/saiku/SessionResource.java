@@ -39,6 +39,15 @@ public class SessionResource extends BaseResource {
      * "authid":"76F5D82581EB579FFCE70DB6494C52D8","roles":["ROLE_ADMIN","ROLE_USER"],
      * "username":"pentaho"}
      *
+     * Example:  {START_OBJECT
+     "firstName"KEY_NAME: "John"VALUE_STRING, "lastName"KEY_NAME: "Smith"VALUE_STRING, "age"KEY_NAME: 25VALUE_NUMBER,
+     "phoneNumber"KEY_NAME : [START_ARRAY
+     {START_OBJECT "type"KEY_NAME: "home"VALUE_STRING, "number"KEY_NAME: "212 555-1234"VALUE_STRING }END_OBJECT,
+     {START_OBJECT "type"KEY_NAME: "fax"VALUE_STRING, "number"KEY_NAME: "646 555-4567"VALUE_STRING }END_OBJECT
+     ]END_ARRAY
+     }END_OBJECT
+
+     *
      * @return SaikuSession
      * @throws IOException
      */

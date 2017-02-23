@@ -8,7 +8,7 @@ package com.yoyohr.bi.bean;
 public class User {
 
     private final long id;
-    private final String name;
+    private final  String name;
 
     public User(long id, String name) {
         this.id = id;
@@ -21,5 +21,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "User[id:"+id+"name:"+name+"]";
     }
 }

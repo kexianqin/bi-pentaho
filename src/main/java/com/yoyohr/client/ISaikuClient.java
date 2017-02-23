@@ -1,6 +1,7 @@
 package com.yoyohr.client;
 
 import com.yoyohr.client.resource.saiku.bean.SaikuConnection;
+import com.yoyohr.client.resource.saiku.bean.SaikuDimensionAndMeasure;
 import com.yoyohr.client.resource.saiku.bean.SaikuSession;
 
 import java.io.IOException;
@@ -27,5 +28,11 @@ public interface ISaikuClient {
      */
     SaikuSession getRestSaikuSession() throws IOException;
 
+    /**
+     *  访问https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/{catalog}/{schema}/{caption}/metadata
+     * @return
+     * @throws IOException
+     */
+    SaikuDimensionAndMeasure getRestOlapDimensions() throws IOException;
 
 }
