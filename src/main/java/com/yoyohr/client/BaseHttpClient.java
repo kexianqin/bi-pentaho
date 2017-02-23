@@ -43,7 +43,16 @@ public class BaseHttpClient {
     }
 
     public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
-        HttpUriRequest request = new HttpGet(url);
+
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach((String key, String value) ->
+                    nvps.add(new BasicNameValuePair(key, value))
+            );
+            url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));//内容转化为字符串加在url后面
+                                               //UrlEncodedFormEntity实现httpEntity接口:An entity composed of a list of url-encoded pairs. This is typically useful while sending an HTTP POST request.
+        }
+        HttpGet request = new HttpGet(url);
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
@@ -71,7 +80,14 @@ public class BaseHttpClient {
     }
 
     public Response post(String url, Map<String, String> params, String mediaType) throws IOException {
-        HttpUriRequest request = new HttpPost(url);
+        HttpPost request = new HttpPost(url);
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach((String key, String value) ->
+                    nvps.add(new BasicNameValuePair(key, value))
+            );
+            request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
@@ -166,6 +182,7 @@ public class BaseHttpClient {
 
     protected String getApiBase(String context) {
         return this.target.toURI() + "/" + context;
+//        return this.target+ "/" + context;
     }
 
 }

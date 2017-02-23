@@ -57,12 +57,12 @@ public class AbstractSaikuObject implements ISaikuObject, Comparable<ISaikuObjec
         if (getClass() != obj.getClass()) {
             return false;
         }
-        AbstractSaikuObject other = (AbstractSaikuObject) obj;
-        if (uniqueName == null) {
+        AbstractSaikuObject other = (AbstractSaikuObject) obj;//向下转型为此类
+        if (this.uniqueName == null) {
             if (other.uniqueName != null) {
                 return false;
             }
-        } else if (!uniqueName.equals(other.uniqueName)) {
+        } else if (!this.uniqueName.equals(other.uniqueName)) {
             return false;
         }
         return true;
@@ -72,6 +72,7 @@ public class AbstractSaikuObject implements ISaikuObject, Comparable<ISaikuObjec
     public String toString() {
         return this.uniqueName;
     }
+
 
     public int compareTo(ISaikuObject o) {
         return getUniqueName().compareTo(o.getUniqueName());
