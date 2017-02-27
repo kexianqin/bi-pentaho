@@ -2,6 +2,10 @@ package com.yoyohr.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Summary
@@ -9,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Leo <jiangwenhua@yoyohr.com>
  */
 public class JsonUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(JsonUtil.class);
 
     private static ObjectMapper objectMapper;
 
@@ -18,8 +24,8 @@ public class JsonUtil {
         }
         try {
             return objectMapper.readValue(jsonString, typeValue);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -31,7 +37,7 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(jsonString, valueTypeRef);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -43,8 +49,8 @@ public class JsonUtil {
         }
         try {
             return objectMapper.writeValueAsString(object);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
         }
         return null;
     }
