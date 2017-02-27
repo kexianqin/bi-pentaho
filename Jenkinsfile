@@ -1,6 +1,6 @@
 #!groovy
 node {
-  stage('Chcekout'){
+  stage('Checkout'){
     checkout scm
   }
 
@@ -14,6 +14,14 @@ node {
 
   stage('Build'){
     sh "bash -ex deploy.sh"
+  }
+
+  stage('Publish Test Report') {
+    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false,
+      reportDir: 'build/reports/tests/test/',
+      reportFiles: 'index.html',
+      reportName: 'HTML Report'])
+    step([$class: 'JacocoPublisher'])
   }
 
 }

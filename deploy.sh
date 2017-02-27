@@ -7,3 +7,4 @@ chmod +x ./gradlew
 ./gradlew
 ./gradlew clean
 ./gradlew build --stacktrace
+./gradlew jacocoTestReport
