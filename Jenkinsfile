@@ -18,7 +18,7 @@ node {
 
   stage('Publish Test Report') {
     junit keepLongStdio: true, testResults: 'build/test-results/test/*.xml'
-    step([$class: 'JacocoPublisher'])
+    step([$class: 'JacocoPublisher', exclusionPattern: '**/*Test.class'])
   }
 
 }
