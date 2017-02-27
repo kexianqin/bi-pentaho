@@ -17,10 +17,7 @@ node {
   }
 
   stage('Publish Test Report') {
-    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false,
-      reportDir: 'build/reports/tests/test/',
-      reportFiles: 'index.html',
-      reportName: 'HTML Report'])
+    junit keepLongStdio: true, testResults: 'build/test-results/test/*.xml'
     step([$class: 'JacocoPublisher'])
   }
 
