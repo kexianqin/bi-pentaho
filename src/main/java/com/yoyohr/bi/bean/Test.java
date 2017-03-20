@@ -48,8 +48,8 @@ public class Test {
         /**
          最普通的
          */
-        UserT user=objectMapper.readValue(jsonUser,UserT.class);//json转化为UserT类对象
-        System.out.print(user.toString());
+//        UserT user=objectMapper.readValue(jsonUser,UserT.class);//json转化为UserT类对象
+//        System.out.print(user.toString());
 //        String jsonString=objectMapper.writeValueAsString(user);//对象转化为json
 //        System.out.println(jsonString);
 
@@ -64,25 +64,33 @@ public class Test {
 //        UserT user2 = new UserT();
 //        user2.setId(4);
 //        user2.setName("lc");
-//
+
 //        Department class1=new Department();
 //        class1.setDname("体育经济Q1241");
 //        List<UserT> listUser=new ArrayList();
 //        listUser.add(user1); listUser.add(user2);
 //        class1.setUsers(listUser);
-//
-//        String jsonString = objectMapper.writeValueAsString(class1);
-        //System.out.println(jsonString);
 
-//        String jsonString="{\"users\":[{\"id\":3,\"name\":\"kxq\"},{\"id\":4,\"name\":\"lc\"}],\"dname\":\"体育经济Q1241\"}";
-//        Department class1=objectMapper.readValue(jsonString,Department.class);
-//        System.out.println(class1.getUsers().get(0).getName());
+//        String jsonString = objectMapper.writeValueAsString(class1);
+//        System.out.println(jsonString);
+
+/**
+ * 能用hashmap的情况：  “###”：{###}
+ */
+        String jsonString="{\"users\":[{\"id\":3,\"name\":\"kxq\"},{\"id\":4,\"name\":\"lc\"}],\"dname\":{\n" +
+            "    \"org.saiku.query.explain\": true,\n" +
+            "    \"saiku.olap.query.drillthrough\": true,\n" +
+            "    \"org.saiku.connection.scenario\": false\n" +
+            "  }}";
+        Department class1=objectMapper.readValue(jsonString,Department.class);
+        System.out.println(class1.getDname().get("org.saiku.query.explain"));
+        //System.out.println(class1.getUsers().get(0).getName());
 
         /**
          * 调用下面的方法<即最终方法>
          */
 //        System.out.println(decode(jsonUser,UserT.class));
-//        System.out.println(decode(jsonUserArray,new TypeReference<List<UserT>>(){}));//！！！！！！！！！！！！！{ }是干什么用的？？
+//        System.out.println(decode(jsonUserArray,new TypeReference<List<UserT>>(){}));//
     }
 
 

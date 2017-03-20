@@ -6,7 +6,8 @@ buildscript {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
     }
     dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE')
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE')//该插件支持多种功能，常用的有两种，第一种是打包项目为可执行的jar包。
+                                                                                     //另外一个可以直接使用tomcat（默认）启动项目。
     }
 }
 
@@ -23,19 +24,25 @@ compileJava {
 
 repositories {
     maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
-    maven {
-        url 'https://repo.spring.io/libs-snapshot'
-    }
+//    maven {
+//        url 'https://repo.spring.io/libs-snapshot'
+//    }
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-web')//Spring通过添加spring-boot-starter-*这样的依赖就能支持具体的某个功能。
+                                                                // 我们这个示例最终是要实现web功能，所以添加的是这个依赖。
+    compile("org.springframework.boot:spring-boot-devtools")   //包含热部署
+
+   //compile("org.springframework.boot:spring-boot-starter-security")  //安全认证,用于账号密码
+
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")//Thymeleaf是一个XML/XHTML/HTML5模板引擎，可用于Web与非Web环境中的应用开发
+
     compile 'mysql:mysql-connector-java:5.1.40',
         'org.apache.httpcomponents:httpclient:4.5.2',
-        'org.dom4j:dom4j:2.0.0',
-        'org.springframework.security:spring-security-web:4.2.2.BUILD-SNAPSHOT'
+        'org.dom4j:dom4j:2.0.0'
     compile fileTree(dir: 'libs', include: '*.jar')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile('com.jayway.jsonpath:json-path')
     testCompile 'org.assertj:assertj-core:3.6.2'
 }

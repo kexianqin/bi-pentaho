@@ -99,7 +99,7 @@ public interface ISaikuClient {
 
     /**
      * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/{catalog}/{schema}/{cube
-     * }/member/{member}
+     * }/member/{member}      (measures 下面的)
      */
     SaikuMember getRestSaikuMember(String saikuCubeUniqueName, String memberName) throws IOException;
 
@@ -114,12 +114,5 @@ public interface ISaikuClient {
      * https://pentaho.yoyohr.com/saiku/rest/saiku/api/query/execute
      */
     QueryResult executeSaikuQuery(String cubeUniqueName, String mdx) throws IOException;
-
-    /**
-     *  访问https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/{catalog}/{schema}/{caption}/metadata
-     * @return
-     * @throws IOException
-     */
-//    SaikuDimensionAndMeasure getRestOlapDimensions() throws IOException;
 
 }

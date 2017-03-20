@@ -2,6 +2,8 @@ package com.yoyohr.client.resource.saiku.query;
 
 import java.util.Properties;
 
+
+
 /**
  * Summary
  *
@@ -13,7 +15,7 @@ public class Cell {
     private String type;
     private Properties properties = new Properties();
 
-    public enum Type {
+    public enum Type {  //枚举类型
         ROW_HEADER,
         ROW_HEADER_HEADER,
         COLUMN_HEADER,
@@ -64,5 +66,7 @@ public class Cell {
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
+
+
 }
 

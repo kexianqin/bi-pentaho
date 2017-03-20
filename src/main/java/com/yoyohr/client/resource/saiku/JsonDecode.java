@@ -36,7 +36,7 @@ public class  JsonDecode {
     }
     public  <T> T decode(String json, TypeReference<T> jsonTypeReference) {
         try {
-            return (T) objectMapper.readValue(json, jsonTypeReference);
+            return  objectMapper.readValue(json, jsonTypeReference);
         } catch (JsonParseException e) {
             log.error("decode(String, JsonTypeReference<T>)", e);
         } catch (JsonMappingException e) {

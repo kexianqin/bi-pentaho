@@ -9,6 +9,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -17,7 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -28,7 +31,6 @@ import java.util.Map;
 public class BaseHttpClient {
 
     public static final String DEFAULT_CHARSET = "UTF-8";
-
     public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
     public static final String APPLICATION_XML = "application/xml";
     public static final String TEXT_PLAIN = "text/plain";
@@ -47,7 +49,7 @@ public class BaseHttpClient {
     }
 
     public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
-
+        String requestUri = url;
 //        if (params != null) {
 //            ArrayList<NameValuePair> nvps = new ArrayList<>();
 //            params.forEach((String key, String value) ->
@@ -57,11 +59,11 @@ public class BaseHttpClient {
 //                                               //UrlEncodedFormEntity实现httpEntity接口:An entity composed of a list of url-encoded pairs. This is typically useful while sending an HTTP POST request.
 //        }
 //        HttpGet request = new HttpGet(url);
-        String requestUri = url;
+
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach(
-                (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
+                (String key, String value) -> nvps.add(new BasicNameValuePair( key, value))
             );
             requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
@@ -105,7 +107,14 @@ public class BaseHttpClient {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach((String key, String value) ->
                 nvps.add(new BasicNameValuePair(key, value))
-            );
+            ); //  回调函数也可以使用以下方法
+//            Set paramss=params.entrySet();
+//            Iterator it =paramss.iterator();
+//            while(it.hasNext()){
+//                Map.Entry paramsss=(Map.Entry)it.next();
+//                nvps.add(new BasicNameValuePair((String)paramsss.getKey(),(String)paramsss.getValue()));
+//            }
+
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
         if (mediaType != null) {
@@ -202,7 +211,6 @@ public class BaseHttpClient {
 
     protected String getApiBase(String context) {
         return this.target.toURI() + "/" + context;
-//        return this.target+ "/" + context;
     }
 
 }

@@ -26,8 +26,8 @@ public class OlapDiscoverResource extends BaseResource {
     public static final String DISCOVER = "/discover/";
     public static final String DIMENSIONS = "/dimensions/";
     public static final String HIERARCHIES = "/hierarchies/";
-    private JsonDecode jsonDecode;
-    //private ObjectMapper objectMapper;
+    //private JsonDecode jsonDecode;
+    //private ObjectMapper objectMapper
 
     public OlapDiscoverResource() {
         super();
