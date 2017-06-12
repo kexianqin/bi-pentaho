@@ -302,69 +302,6 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         return resource.parseSaikuAdminUser();
     }
 
-    public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException {
-        String cubeUniqueName="[youpin_kdwh_srm].[youpin_kdwh_srm].[youpin_kdwh_srm].[youpin_kdwh_expense]";
-        String mdx="WITH\n" +
-            "SET [~ROWS] AS\n" +
-            "    {[operator].[operator].[operator_key].Members}\n" +
-            "SELECT\n" +
-            "NON EMPTY {[Measures].[action_numbers]} ON COLUMNS,\n" +
-            "NON EMPTY [~ROWS] ON ROWS\n" +
-            "FROM [youpin_kdwh_expense]";
-        String mdx1="with \n" +
-            "  member [measures].[name] as  [operator].[operator_key].currentmember.properties(\"operator_name\")\n" +
-            "  member [measures].[city] as [operator].[operator_key].currentmember.properties(\"operator_city\")\t\n" +
-            "select\n" +
-            " {[measures].[name],[measures].[city]} on columns,\n" +
-            " Descendants([operator].[operator_enterprise_id].[300],[operator].[operator_key],self) on rows\n" +
-            "from [youpin_kdwh_expense]";
-        SaikuClient saikuClient =new SaikuClient();
-        System.out.println(saikuClient.getAvailableAdminMondrianSchemas());
-        System.out.println(saikuClient.getAvailableAdminDataSources());
-//        List<Result> results=new ArrayList<>();
-//        QueryResult queryResult=saikuClient.executeSaikuQuery(cubeUniqueName,mdx1);
-//        List<Cell[]> cellset=queryResult.getCellset();
-//        for(int i=0;i<cellset.size();i++){
-//            Result result=new Result();
-//            for(Cell cells:cellset.get(i)){
-//                log.info(cells.getType());
-//                log.info(cells.getValue());
-//                if(cells.getType().equals(Cell.Type.ROW_HEADER.toString())){
-//                    result.setName(cells.getValue());
-//                }
-//                if(cells.getType().equals(Cell.Type.DATA_CELL.toString())){
-//                    result.setValue(Double.parseDouble(cells.getValue().replace(",","").trim()));
-//                }
-//            }
-//            if(result.getName()!=null){
-//                results.add(result);
-//            }
-//        }
-//        System.out.println(JsonUtil.toJson(results));
-
-//        SaikuClient saikuClient =new SaikuClient();
-//
-//        List<SaikuAdminMondrianSchema> list=saikuClient.getAvailableAdminMondrianSchemas();
-//        for (SaikuAdminMondrianSchema MondrianSchema :list){
-//            System.out.println(MondrianSchema.getName());
-//        }
-//
-//        List<SaikuAdminDatasource> list1=saikuClient.getAvailableAdminDataSources();
-//        for (SaikuAdminDatasource datasource :list1){
-//            System.out.println(datasource.getConnectionname());
-//        }
-//
-//        List<SaikuAdminUser> list2=saikuClient.getExistingAdminUsers();
-//        for (SaikuAdminUser user : list2){
-//            System.out.println(user.getUsername());
-//        }
-//
-//        System.out.println(saikuClient.getSavedSchema("foodmart4.xml"));
-//
-//        System.out.println(saikuClient.getUserDetails(1).getUsername());
-    }
-
-
     /**
      * 得到要访问的url地址，传入的endpoint为尾缀
      *
