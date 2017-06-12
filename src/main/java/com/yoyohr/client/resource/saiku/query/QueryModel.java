@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author Leo <jiangwenhua@yoyohr.com>
  */
-public class    QueryModel {
+public class QueryModel {
 
     private Map<Object, Object> axes = new HashMap<>();
     private boolean visualTotals = false;

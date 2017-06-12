@@ -23,37 +23,36 @@ import java.util.List;
  */
 @RestController
 public class ResultController {
-    private static Logger log= LoggerFactory.getLogger(ResultController.class);
+    private static Logger log = LoggerFactory.getLogger(ResultController.class);
 
 
     @RequestMapping(value = "/results", method = RequestMethod.GET)
     public List<Result> index() throws UnanthenticatedException, IOException, URISyntaxException {
         List<Result> results = new ArrayList<>();
         SaikuClient client = new SaikuClient();
+        String cubeUniqueName ="[youpin_kdwh].[youpin_kdwh].[youpin_kdwh].[youpin_kdwh_expense]";
         String mdx="WITH\n" +
             "SET [~ROWS] AS\n" +
-            "    {[enterprise.enterprise].[enterprise_name].Members}\n" +
+            "    {[operator].[operator].[operator_name].Members}\n" +
             "SELECT\n" +
-            "NON EMPTY {[Measures].[action_key]} ON COLUMNS,\n" +
+            "NON EMPTY {[Measures].[reimbursement amount]} ON COLUMNS,\n" +
             "NON EMPTY [~ROWS] ON ROWS\n" +
-            "FROM [youpin_dwh]\n" +
-            "where [operator.operator].[operator_name].[帅建]";
-        String cubeUniqueName="[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]";
-        QueryResult queryResult= client.executeSaikuQuery( cubeUniqueName,mdx);
-        List<Cell[]> cellset=queryResult.getCellset();
-        for(int i=0;i<cellset.size();i++) {
+            "FROM [youpin_kdwh_expense]";
+        QueryResult queryResult = client.executeSaikuQuery(cubeUniqueName, mdx);
+        List<Cell[]> cellset = queryResult.getCellset();
+        for (int i = 0; i < cellset.size(); i++) {
             Result result = new Result();
             for (Cell ce : cellset.get(i)) {
                 log.info(ce.getType());
                 log.info(ce.getValue());
-                if(ce.getType().equals(Cell.Type.ROW_HEADER.toString())) {
+                if (ce.getType().equals(Cell.Type.ROW_HEADER.toString())) {
                     result.setName(ce.getValue());
                 }
-                if(ce.getType().equals(Cell.Type.DATA_CELL.toString())) {
-                    result.setValue(Integer.parseInt(ce.getValue()));
+                if (ce.getType().equals(Cell.Type.DATA_CELL.toString())) {
+                    result.setValue(Double.parseDouble(ce.getValue().replace(",","").trim()));
                 }
             }
-            if(result.getName()!=null){
+            if (result.getName() != null) {
                 results.add(result);
             }
         }

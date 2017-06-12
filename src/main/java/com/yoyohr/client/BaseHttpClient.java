@@ -107,7 +107,7 @@ public class BaseHttpClient {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach((String key, String value) ->
                 nvps.add(new BasicNameValuePair(key, value))
-            ); //  回调函数也可以使用以下方法
+            ); //  也可以使用以下方法
 //            Set paramss=params.entrySet();
 //            Iterator it =paramss.iterator();
 //            while(it.hasNext()){

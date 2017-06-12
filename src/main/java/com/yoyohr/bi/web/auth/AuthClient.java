@@ -46,16 +46,6 @@ public class AuthClient extends BaseHttpClient {
         params.put("token",auth);
         Response response=get(requestUri,params);
         authResource.setResponse(response);
-        //System.out.println(response.getData());
         return authResource.determineAuth();
     }
-
-//    public static void main(String[] args) throws Exception {
-//        AuthClient a =new AuthClient();
-//        boolean b=a.WhetherThereIsPermission("");
-//        System.out.println(b);
-//    }
-
-
-
 }

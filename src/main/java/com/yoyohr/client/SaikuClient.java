@@ -1,10 +1,7 @@
 package com.yoyohr.client;
 
-import com.yoyohr.client.resource.saiku.BaseResource;
-import com.yoyohr.client.resource.saiku.OlapMetadataResource;
-import com.yoyohr.client.resource.saiku.OlapDiscoverResource;
-import com.yoyohr.client.resource.saiku.QueryResource;
-import com.yoyohr.client.resource.saiku.SessionResource;
+import com.yoyohr.bi.bean.Result;
+import com.yoyohr.client.resource.saiku.*;
 import com.yoyohr.client.resource.saiku.bean.*;
 import com.yoyohr.client.resource.saiku.query.Cell;
 import com.yoyohr.client.resource.saiku.query.QueryResult;
@@ -15,12 +12,12 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,7 +47,7 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
      */
     public SaikuClient() throws IOException, URISyntaxException, UnanthenticatedException {
         log.info("SaikuClient Constructing...");
-        target = new HttpHost(SAIKU_HOST, -1, SAIKU_PROTOCOL);//使用给定的协议，主机名和端口创建HttpHost实例,-1表示默认端口：http://pentaho.yoyohr.com
+        target = new HttpHost(SAIKU_HOST, 9090,SAIKU_PROTOCOL);//使用给定的协议，主机名和端口创建HttpHost实例,-1表示默认端口：http://pentaho.yoyohr.com
         cookieStore = new BasicCookieStore();
         httpClient = HttpClients.custom() // 即 new Httpclient()
             .setDefaultCookieStore(cookieStore).build(); //将CookieStore设置到httpClient中
@@ -174,34 +171,6 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         return resource.parseSaikuLevels();
     }
 
-//    @Override
-//    public SaikuDimensionAndMeasure getRestOlapDimensions(String saikuCubeUniqueName) throws IOException {
-//        OlapDiscoverResource resource = new OlapDiscoverResource();
-//        String requestUri = getApiUri("/" + saikuSession.getUsername()
-//            + resource.getUriOfGetRestSaikuDimensions(saikuCubeUniqueName));
-//        Response response = get(requestUri);
-//        resource.setResponse(response);
-//        return resource.parseSaikuDimensions();
-//        Response response = get(getApiUri(saikuSession.getUsername()+"/"+OlapDiscoverResource.OLAP_DISCOVER+"/"+
-//                "youpin_dwh/youpin_dwh/youpin_dwh/youpin_dwh/"+ OlapMetadataResource.OLAP_METADATA));
-//        OlapMetadataResource resource =new OlapMetadataResource(response);
-//        return resource.getRestOlapDimensionsAndMeasure();
-//    }
-
-//    private void setCookies() throws IOException, URISyntaxException {
-
-    //        HttpUriRequest login = RequestBuilder.post()
-//                .setUri(new URI(getApiUri(SessionResource.SESSION)))
-//                .addParameter("username", SAIKU_USERNAME)
-//                .addParameter("password", SAIKU_PASSWORD)
-//                .build();
-    //HttpUriRequest:HttpRequest接口的扩展版本，提供方便的方法来访问请求属性，如请求URI和方法类型。 RequestBuilder:HttpUriRequest实例的构建器。
-//        HttpUriRequest login = RequestBuilder.post()
-//                .setUri(new URI(getApiUri(SessionResource.SESSION)))
-//                .addParameters(new BasicNameValuePair("username", SAIKU_USERNAME), new BasicNameValuePair("password", SAIKU_PASSWORD))
-//                .build();
-//        httpClient.execute(login);
-//        saikuSession = getRestSaikuSession();
     public List<SimpleCubeElement> getRestSaikuLevelMembers(String saikuCubeUniqueName,
                                                             String dimensionName,
                                                             String hierarchyName,
@@ -270,19 +239,131 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
     public QueryResult executeSaikuQuery(String cubeUniqueName, String mdx) throws IOException {
         QueryResource resource = new QueryResource();
         String requestUri = getApiUri(resource.getUriOfExecuteQuery());
-        String queryJson = resource.constructQueryJson(cubeUniqueName, mdx);
+        String queryJson = resource.constructQueryJson(cubeUniqueName, mdx);//得到POST的内容
         Response response = postJson(requestUri, queryJson);
         resource.setResponse(response);
         return resource.parseQueryResult();
     }
 
-    public String executeQuery() throws IOException {
-        String jsonString =
-            "{\"name\":\"ADCD8856-C485-FDD8-99DA-3325133D49E4\",\"queryModel\":{},\"queryType\":\"OLAP\",\"type\":\"MDX\",\"cube\":{\"uniqueName\":\"[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]\",\"name\":\"youpin_dwh\",\"connection\":\"youpin_dwh\",\"catalog\":\"youpin_dwh\",\"schema\":\"youpin_dwh\",\"caption\":null,\"visible\":false},\"mdx\":\"WITH\\r\\nSET [~ROWS] AS\\r\\n    {[operator].[operator].[operator_name].Members}\\r\\nSELECT\\r\\nNON EMPTY {[Measures].[action_key]} ON COLUMNS,\\r\\nNON EMPTY [~ROWS] ON ROWS\\r\\nFROM [youpin_dwh]\",\"parameters\":{},\"plugins\":{},\"properties\":{\"saiku.olap.query.automatic_execution\":true,\"saiku.olap.query.nonempty\":true,\"saiku.olap.query.nonempty.rows\":true,\"saiku.olap.query.nonempty.columns\":true,\"saiku.ui.render.mode\":\"table\",\"saiku.olap.query.filter\":true,\"saiku.olap.result.formatter\":\"flat\",\"org.saiku.query.explain\":true,\"saiku.olap.query.drillthrough\":true,\"org.saiku.connection.scenario\":false},\"metadata\":{}}";
-        String requestUri = "https://pentaho.yoyohr.com/saiku/rest/saiku/api/query/execute";
-        Response reponse = postJson(requestUri, jsonString);
-        return reponse.getData();
+    public String executeSaikuQuery2 (String cubeUniqueName, String mdx) throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri = getApiUri(resource.getUriOfExecuteQuery());
+        String queryJson = resource.constructQueryJson(cubeUniqueName, mdx);//得到POST的内容
+        Response response = postJson(requestUri, queryJson);
+        resource.setResponse(response);
+        return response.getData();
     }
+
+    @Override
+    public List<SaikuAdminDatasource> getAvailableAdminDataSources() throws IOException{
+        AdminResource resource =new AdminResource();
+        String requestUri=getApiUri(resource.getUriOfGetAvailableDataSources());
+        Response response=get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuAdminDatasources();
+    }
+
+    @Override
+    public List<SaikuAdminMondrianSchema> getAvailableAdminMondrianSchemas() throws IOException{
+        AdminResource resource =new AdminResource();
+        String requestUri=getApiUri(resource.getUriOfGetAvailableAdminMondrianSchemas());
+        Response response=get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuAdminMondrianSchemas();
+    }
+
+    /**
+       返回的是schema的内容(例如id=foodmart4.xml)
+     */
+    @Override
+    public String getSavedSchema(String id) throws IOException{
+        AdminResource resource = new AdminResource();
+        String requestUri=getApiUri(resource.getUriOfGetSavedSchema(id));
+        Response response=get(requestUri);
+        resource.setResponse(response);
+        return resource.getResponse().getData();
+    }
+
+    @Override
+    public List<SaikuAdminUser> getExistingAdminUsers() throws IOException{
+        AdminResource resource = new AdminResource();
+        String requestUri=getApiUri(resource.getUriOfGetExistingAdminUsers());
+        Response response=get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuAdminUsers();
+    }
+
+    @Override
+    public SaikuAdminUser getUserDetails(int id) throws IOException{
+        AdminResource resource = new AdminResource();
+        String requestUri=getApiUri(resource.getUriOfGetUserDetails(id));
+        Response response= get(requestUri);
+        resource.setResponse(response);
+        return resource.parseSaikuAdminUser();
+    }
+
+    public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException {
+        String cubeUniqueName="[youpin_kdwh_srm].[youpin_kdwh_srm].[youpin_kdwh_srm].[youpin_kdwh_expense]";
+        String mdx="WITH\n" +
+            "SET [~ROWS] AS\n" +
+            "    {[operator].[operator].[operator_key].Members}\n" +
+            "SELECT\n" +
+            "NON EMPTY {[Measures].[action_numbers]} ON COLUMNS,\n" +
+            "NON EMPTY [~ROWS] ON ROWS\n" +
+            "FROM [youpin_kdwh_expense]";
+        String mdx1="with \n" +
+            "  member [measures].[name] as  [operator].[operator_key].currentmember.properties(\"operator_name\")\n" +
+            "  member [measures].[city] as [operator].[operator_key].currentmember.properties(\"operator_city\")\t\n" +
+            "select\n" +
+            " {[measures].[name],[measures].[city]} on columns,\n" +
+            " Descendants([operator].[operator_enterprise_id].[300],[operator].[operator_key],self) on rows\n" +
+            "from [youpin_kdwh_expense]";
+        SaikuClient saikuClient =new SaikuClient();
+        System.out.println(saikuClient.getAvailableAdminMondrianSchemas());
+        System.out.println(saikuClient.getAvailableAdminDataSources());
+//        List<Result> results=new ArrayList<>();
+//        QueryResult queryResult=saikuClient.executeSaikuQuery(cubeUniqueName,mdx1);
+//        List<Cell[]> cellset=queryResult.getCellset();
+//        for(int i=0;i<cellset.size();i++){
+//            Result result=new Result();
+//            for(Cell cells:cellset.get(i)){
+//                log.info(cells.getType());
+//                log.info(cells.getValue());
+//                if(cells.getType().equals(Cell.Type.ROW_HEADER.toString())){
+//                    result.setName(cells.getValue());
+//                }
+//                if(cells.getType().equals(Cell.Type.DATA_CELL.toString())){
+//                    result.setValue(Double.parseDouble(cells.getValue().replace(",","").trim()));
+//                }
+//            }
+//            if(result.getName()!=null){
+//                results.add(result);
+//            }
+//        }
+//        System.out.println(JsonUtil.toJson(results));
+
+//        SaikuClient saikuClient =new SaikuClient();
+//
+//        List<SaikuAdminMondrianSchema> list=saikuClient.getAvailableAdminMondrianSchemas();
+//        for (SaikuAdminMondrianSchema MondrianSchema :list){
+//            System.out.println(MondrianSchema.getName());
+//        }
+//
+//        List<SaikuAdminDatasource> list1=saikuClient.getAvailableAdminDataSources();
+//        for (SaikuAdminDatasource datasource :list1){
+//            System.out.println(datasource.getConnectionname());
+//        }
+//
+//        List<SaikuAdminUser> list2=saikuClient.getExistingAdminUsers();
+//        for (SaikuAdminUser user : list2){
+//            System.out.println(user.getUsername());
+//        }
+//
+//        System.out.println(saikuClient.getSavedSchema("foodmart4.xml"));
+//
+//        System.out.println(saikuClient.getUserDetails(1).getUsername());
+    }
+
 
     /**
      * 得到要访问的url地址，传入的endpoint为尾缀
@@ -291,8 +372,8 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
      * @return
      */
     private String getApiUri(String endpoint) {
-        String uri = getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;// saiku 和后面的/rest/saiku为什么不放到一起？？？
-        log.debug("===========" + uri);    // https://pentaho.yoyohr.com/saiku/rest/saiku/+endpoint(例如saiku)
+        String uri = getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;// saiku 和后面的/rest/saiku为什么不放到一起
+       log.debug("===========" + uri);    // https://pentaho.yoyohr.com/saiku/rest/saiku/+endpoint(例如saiku)
         return uri;
     }
 }

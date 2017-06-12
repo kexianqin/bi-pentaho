@@ -21,6 +21,7 @@ public class QueryResult {
     private int leftOffset;
 
     public QueryResult() {
+
     }
 
     public List<Cell[]> getCellset() {

@@ -6,7 +6,7 @@ package com.yoyohr.bi.bean;
 public class Result {
 
     private String name;
-    private int value;
+    private double value;
 
     public Result(){}
 
@@ -18,11 +18,11 @@ public class Result {
         this.name = name;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(double value) {
         this.value = value;
     }
 }
