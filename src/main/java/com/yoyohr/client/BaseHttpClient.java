@@ -1,26 +1,31 @@
 package com.yoyohr.client;
 
 import org.apache.http.*;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
+
+import org.apache.http.HttpEntity;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+
+import static com.yoyohr.client.PentahoClient.generateAuthorizationToken;
 
 
 /**
@@ -50,29 +55,56 @@ public class BaseHttpClient {
 
     public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
         String requestUri = url;
-//        if (params != null) {
-//            ArrayList<NameValuePair> nvps = new ArrayList<>();
-//            params.forEach((String key, String value) ->
-//                    nvps.add(new BasicNameValuePair(key, value))
-//            );
-//            url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));//内容转化为字符串加在url后面
-//                                               //UrlEncodedFormEntity实现httpEntity接口:An entity composed of a list of url-encoded pairs. This is typically useful while sending an HTTP POST request.
-//        }
-//        HttpGet request = new HttpGet(url);
-
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach(
-                (String key, String value) -> nvps.add(new BasicNameValuePair( key, value))
+                (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
             );
             requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
         HttpGet request = new HttpGet(requestUri);
+        /**
+         * 基本认证
+         */
+        request.addHeader("Authorization", generateAuthorizationToken());
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+    }
+
+    /**
+     * 用于以get下载文件
+     */
+    public Response getFile(String url) throws IOException {
+        return getFile(url, null, null);
+    }
+
+    public Response getFile(String url, Map<String, String> params) throws IOException {
+        return getFile(url, params, null);
+    }
+
+    public Response getFile(String url, Map<String, String> params, String mediaType) throws IOException {
+        String requestUri = url;
+        if (params != null) {
+            ArrayList<NameValuePair> nvps = new ArrayList<>();
+            params.forEach(
+                (String key, String value) -> nvps.add(new BasicNameValuePair(key, value))
+            );
+            requestUri = url + "?" + EntityUtils.toString(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+        }
+        HttpGet request = new HttpGet(requestUri);
+        /**
+         * 基本认证
+         */
+        request.addHeader("Authorization", generateAuthorizationToken());
+        if (mediaType != null) {
+            request.setHeader("Accept", mediaType);
+        }
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
+        return httpClient.execute(
+            target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
 
     public Response download(String url) throws IOException {
@@ -124,6 +156,21 @@ public class BaseHttpClient {
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
+    public Response upload(String url, String filename) throws IOException {
+        HttpPost request = new HttpPost(url);
+        request.setHeader("Accept", APPLICATION_XML);
+        request.addHeader("Authorization", generateAuthorizationToken());
+
+        HttpEntity httpEntity = MultipartEntityBuilder.create()
+            .addPart("fileUpload",new FileBody(new File(filename)))
+            .addTextBody("overwrite","true") //用作 filesSystemRestore 添加text形式的parameter.
+            .setContentType(ContentType.MULTIPART_FORM_DATA).build();
+
+        request.setEntity(httpEntity);
+        return httpClient.execute(
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+    }
+
     public Response postJson(String url, String jsonString) throws IOException {
         HttpPost request = new HttpPost(url);
         request.setHeader("Accept", APPLICATION_JSON_UTF8);
@@ -136,8 +183,14 @@ public class BaseHttpClient {
         return put(url, null);
     }
 
+
     public Response put(String url, Map<String, String> params) throws IOException {
         HttpPut request = new HttpPut(url);
+        /**
+         * 基本认证
+         */
+        request.addHeader("Authorization", generateAuthorizationToken());
+        //request.addHeader("Authorization","Basic QWRtaW46cGFzc3dvcmQ=");
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach(
@@ -145,9 +198,11 @@ public class BaseHttpClient {
             );
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
+
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
+
 
     public void close() throws IOException {
         httpClient.close();
@@ -170,7 +225,10 @@ public class BaseHttpClient {
             InputStream inputStream = entity.getContent();
             String fileName = getFileName(response);
             if (inputStream != null) {
-                File file = new File(fileName);
+                /**
+                 *  下载到桌面
+                 */
+                File file = new File("C:/Users/Administrator/Desktop/" + fileName);
                 FileOutputStream fileOutputStream = new FileOutputStream(file);
                 /**
                  * 根据实际运行效果 设置缓冲区大小

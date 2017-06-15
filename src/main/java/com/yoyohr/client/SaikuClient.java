@@ -304,12 +304,11 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
     /**
      * 得到要访问的url地址，传入的endpoint为尾缀
-     *
      * @param endpoint
      * @return
      */
     private String getApiUri(String endpoint) {
-        String uri = getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;// saiku 和后面的/rest/saiku为什么不放到一起
+        String uri = getApiBase(SAIKU_CONTEXT) + BaseResource.REST_SAIKU + endpoint;
        log.debug("===========" + uri);    // https://pentaho.yoyohr.com/saiku/rest/saiku/+endpoint(例如saiku)
         return uri;
     }

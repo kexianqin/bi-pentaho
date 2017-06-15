@@ -39,7 +39,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")//Thymeleaf是一个XML/XHTML/HTML5模板引擎，可用于Web与非Web环境中的应用开发
 
     compile 'mysql:mysql-connector-java:5.1.40',
-        'org.apache.httpcomponents:httpclient:4.5.2',
+        'org.apache.httpcomponents:httpclient:4.5.3',
+        'org.apache.httpcomponents:httpmime:4.5.3',
         'org.dom4j:dom4j:2.0.0'
     compile fileTree(dir: 'libs', include: '*.jar')
     testCompile("org.springframework.boot:spring-boot-starter-test")
