@@ -23,7 +23,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import static com.yoyohr.client.PentahoClient.generateAuthorizationToken;
 
@@ -48,11 +50,9 @@ public class BaseHttpClient {
     public Response get(String url) throws IOException {
         return get(url, null, null);
     }
-
     public Response get(String url, Map<String, String> params) throws IOException {
         return get(url, params, null);
     }
-
     public Response get(String url, Map<String, String> params, String mediaType) throws IOException {
         String requestUri = url;
         if (params != null) {
@@ -74,17 +74,16 @@ public class BaseHttpClient {
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
+
     /**
      * 用于以get下载文件
      */
     public Response getFile(String url) throws IOException {
         return getFile(url, null, null);
     }
-
     public Response getFile(String url, Map<String, String> params) throws IOException {
         return getFile(url, params, null);
     }
-
     public Response getFile(String url, Map<String, String> params, String mediaType) throws IOException {
         String requestUri = url;
         if (params != null) {
@@ -102,15 +101,14 @@ public class BaseHttpClient {
         if (mediaType != null) {
             request.setHeader("Accept", mediaType);
         }
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
 
+
     public Response download(String url) throws IOException {
         return download(url, null);
     }
-
     public Response download(String url, Map<String, String> params) throws IOException {
         String requestUri = url;
         if (params != null) {
@@ -125,28 +123,27 @@ public class BaseHttpClient {
             target, request, (HttpResponse response) -> handleResponseAsStream(response), context);
     }
 
+
     public Response post(String url) throws IOException {
         return post(url, null, null);
     }
-
     public Response post(String url, Map<String, String> params) throws IOException {
         return post(url, params, null);
     }
-
     public Response post(String url, Map<String, String> params, String mediaType) throws IOException {
         HttpPost request = new HttpPost(url);
         if (params != null) {
             ArrayList<NameValuePair> nvps = new ArrayList<>();
             params.forEach((String key, String value) ->
                 nvps.add(new BasicNameValuePair(key, value))
-            ); //  也可以使用以下方法
+            );
+            //  也可以使用以下方法
 //            Set paramss=params.entrySet();
 //            Iterator it =paramss.iterator();
 //            while(it.hasNext()){
 //                Map.Entry paramsss=(Map.Entry)it.next();
 //                nvps.add(new BasicNameValuePair((String)paramsss.getKey(),(String)paramsss.getValue()));
 //            }
-
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
         if (mediaType != null) {
@@ -156,20 +153,32 @@ public class BaseHttpClient {
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
-    public Response upload(String url, String filename) throws IOException {
-        HttpPost request = new HttpPost(url);
-        request.setHeader("Accept", APPLICATION_XML);
-        request.addHeader("Authorization", generateAuthorizationToken());
 
-        HttpEntity httpEntity = MultipartEntityBuilder.create()
+    /**
+     * 用于上传文件.
+     * @param url
+     * @param filename (绝对路径)
+     * @return
+     * @throws IOException
+     */
+    public Response upload(String url, String filename, Map<String, String> formData) throws IOException {
+        HttpPost request = new HttpPost(url);
+        //request.setHeader("Accept", APPLICATION_XML);-->若设置成APPLICATION_XML,则importFile()将失败.404 Not Acceptable.
+        request.addHeader("Authorization", generateAuthorizationToken());
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        if(formData!=null){
+            formData.forEach((String key,String value)-> multipartEntityBuilder.addTextBody(key,value));
+        }
+        HttpEntity httpEntity = multipartEntityBuilder
             .addPart("fileUpload",new FileBody(new File(filename)))
-            .addTextBody("overwrite","true") //用作 filesSystemRestore 添加text形式的parameter.
+            //.addTextBody("overwrite","true") //用作添加text形式的parameter.
             .setContentType(ContentType.MULTIPART_FORM_DATA).build();
 
         request.setEntity(httpEntity);
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
+
 
     public Response postJson(String url, String jsonString) throws IOException {
         HttpPost request = new HttpPost(url);
@@ -179,12 +188,17 @@ public class BaseHttpClient {
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
 
+
     public Response put(String url) throws IOException {
-        return put(url, null);
+        return put(url, null,null,null);
     }
-
-
-    public Response put(String url, Map<String, String> params) throws IOException {
+    public Response put(String url,String stringEntity) throws IOException {
+        return put(url, null,stringEntity,null);
+    }
+    public Response put(String url,Map<String, String> params) throws IOException {
+        return put(url,  params,null,null);
+    }
+    public Response put(String url, Map<String, String> params,String stringEntity,String contentType) throws IOException {
         HttpPut request = new HttpPut(url);
         /**
          * 基本认证
@@ -198,21 +212,27 @@ public class BaseHttpClient {
             );
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
-
+        if(stringEntity != null){
+            StringEntity entity = new StringEntity(stringEntity,DEFAULT_CHARSET);
+            if(contentType!=null){
+                entity.setContentType(contentType);
+            }
+            request.setEntity(entity);
+        }
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
-
 
     public void close() throws IOException {
         httpClient.close();
     }
 
-    private Response handleResponseAsString(HttpResponse response) throws IOException {
+    private Response handleResponseAsString(HttpResponse response)  throws IOException {
         int status = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
         return new Response(
-            status >= 200 && status < 400 ? 0 : status,
+           //2017-06-22将条件 status<400改到201,因为发现存在status=204,No Content的情况
+            status >= 200 && status < 201 ? 0 : status,
             entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
         );
     }
@@ -245,7 +265,7 @@ public class BaseHttpClient {
             return new Response(0, fileName);
         } else {
             return new Response(
-                status >= 200 && status < 400 ? 0 : status,
+                status >= 200 && status < 201 ? 0 : status,
                 entity != null ? EntityUtils.toString(entity, DEFAULT_CHARSET) : null
             );
         }
