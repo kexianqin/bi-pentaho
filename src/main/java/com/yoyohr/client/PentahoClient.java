@@ -1,23 +1,16 @@
 package com.yoyohr.client;
-
-
-import com.sun.xml.internal.bind.v2.runtime.Name;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import com.yoyohr.client.resource.pentaho.AnalysisResouce;
 import com.yoyohr.client.resource.pentaho.FileResouce;
 import com.yoyohr.client.resource.pentaho.bean.*;
-import com.yoyohr.util.JsonUtil;
 import com.yoyohr.util.PropertiesReader;
-import com.yoyohr.util.XmlReader;
 import com.yoyohr.util.XmlUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.HttpClients;
 import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -459,6 +452,78 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
         return response.getData();
     }
 
+    @Override
+    public DataSourceList getAnalysisDataSourceIds() throws IOException {
+        AnalysisResouce resouce =new AnalysisResouce();
+        String requestUri=getApiUri(resouce.PENTAHO_API);
+        Response response =get(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功获取了所有分析文件ID");
+        }else{
+            log.info("出现了问题");
+        }
+        resouce.setResponse(response);
+        return resouce.parseDataSourceList();
+    }
+
+    @Override
+    public String downloadAnalysisFile(String catalogId) throws IOException {
+        AnalysisResouce resouce =new AnalysisResouce();
+        String requestUri=getApiUri(resouce.PENTAHO_API+"/"+catalogId);
+        Response response =getFile(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功下载了"+catalogId);
+        }else{
+            log.info("下载出现了问题");
+        }
+        return response.getData();
+    }
+
+    @Override
+    public void deleteAnalysisFile(String catalogId) throws IOException {
+        AnalysisResouce resouce =new AnalysisResouce();
+        String requestUri=getApiUri(resouce.PENTAHO_API+"/"+catalogId);
+        Response response =delete(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功删除了"+catalogId);
+        }else{
+            log.info("删除出现了问题");
+        }
+    }
+
+    @Override
+    public void importAnalysisSchema(String catalogId, String fileName, boolean overwrite, boolean xmlaEnabledFlag, String datasource) throws IOException {
+        AnalysisResouce resouce =new AnalysisResouce();
+        String requestUri=getApiUri(resouce.PENTAHO_API+"/"+catalogId);
+        HashMap<String,String> formData = new HashMap<>();
+        formData.put("overwrite",String.valueOf(overwrite));
+        formData.put("xmlaEnabledFlag",String.valueOf(xmlaEnabledFlag));
+        formData.put("parameters","Datasource="+datasource);
+        Response response = putUpload(requestUri,"uploadInput",fileName,formData);
+        if (response.getCode() == 0 ||response.getCode() == 201) {
+            log.info("导入成功");
+        }else if (response.getCode() == 409) {
+            log.info("请检查是否重复导入(你或许设置了不覆盖)");
+        }else{
+            log.info("导入失败");
+        }
+    }
+
+
+    public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException,DocumentException{
+        PentahoClient pentahoclient =new PentahoClient();
+        System.out.println(XmlUtil.convertToXml(pentahoclient.getAnalysisDataSourceIds()));
+//        pentahoclient.downloadAnalysisFile("youpin_kdwh_srm");
+//        pentahoclient.deleteAnalysisFile("youpin_kdwh_srm");
+
+//        pentahoclient.importAnalysisSchema("lalalalalalalalalala",
+//            "C:/Users/Administrator/Desktop/youpin改版2017-05-26-6-1.xml",false,false,"AgileBI");
+
+
+    }
+
+
+
 
     /**
      * Generation the Authorization
@@ -485,58 +550,6 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
         String uri = getApiBase(PENTAHO_CONTEXT) + endpoint; //    http://(192.168.1.124:9090)/pentaho+...
         log.debug("===========" + uri);
         return uri;
-    }
-
-
-    public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException,DocumentException{
-        PentahoClient pentahoclient =new PentahoClient();
-
-//        pentahoclient.addDirectory("");
-//        pentahoclient.filesBackup();
-//        pentahoclient.filesSystemRestore("C:/Users/Administrator/Desktop/SystemBackup.zip",true);
-//        System.out.println(pentahoclient.getFileACL("home:pat:pattkk.xml"));
-//        System.out.println(pentahoclient.getFileId("home:pat:pattkk.xml"));
-//        pentahoclient.deleteFiles("home:admin:115");
-//        pentahoclient.deleteFilesPermanent("public:335");
-//        pentahoclient.createFile("home:pat:pattl.xml","<Property name=\"operator_name\" column=\"operator_name\" type=\"String\">\n" +
-//            "        123</Property>");
-//        pentahoclient.getFileContent("home:pat:pattl.xml",true);
-//        System.out.println(pentahoclient.getChildFiles("home:myDashboards"));
-//        System.out.println(pentahoclient.getRootChildFiles());
-//        pentahoclient.createDir("home:admin:112");
-//        System.out.println(pentahoclient.getFilesTree(-1,"*.wcdf|pattkk*|FILES|includeMembers=id,path",null,null));
-//        System.out.println(pentahoclient.getSelectedFilesTree("home:pat",-1,null,null,null));
-//        System.out.println(pentahoclient.getPropertiesOfRootDirectory());
-
-//        System.out.println(XmlUtil.convertToXml(pentahoclient.retrieveTrashFolder()));
-//                List<RepositoryFileDto> list=pentahoclient.retrieveTrashFolder().getRepositoryFileDtoList();
-//                    for (RepositoryFileDto a:list) {
-//                        System.out.println(a.getName());
-//                    }
-
-//        pentahoclient.renameFile("home:admin:113","114");
-//        pentahoclient.getFileProperties("home:admin:");
-
-//        System.out.println(JsonUtil.toJson(pentahoclient.getFileMetadata("home:admin:115")));
-
-//        pentahoclient.putFileMetadata("home:admin:115","{\n" +
-//            "    \"stringKeyStringValueDto\": [\n" +
-//            "        {\n" +
-//            "            \"key\": \"_PERM_SCHEDULABLE\",\n" +
-//            "            \"value\": \"true\"\n" +
-//            "        },\n" +
-//            "        {\n" +
-//            "            \"key\": \"_PERM_HIDDEN\",\n" +
-//            "            \"value\": \"false\"\n" +
-//            "        }\n" +
-//            "    ]\n" +
-//            "}");
-
-//        pentahoclient.downloadFile("home:pat");
-//        pentahoclient.restoreFile("7e79ac8b-5054-4bf6-9f35-48f9cb754abb");
-//        pentahoclient.importFile("C:/Users/Administrator/Desktop/MondrianSchema-youpin_kdwh.xml","/home/suzy");
-//        System.out.println(pentahoclient.getWorkspaceDir());
-//        System.out.println(pentahoclient.getWorkspaceDirForSlectedUser("admin"));
     }
 }
 

@@ -239,8 +239,40 @@ public interface IPentahoClient {
 
 /**
  * ---------------------------------------- ↓Analysis Resource↓ ------------------------------------------------------
+ * This service allows for listing, download, upload, and removal of Analysis files or Mondrian schemas in the BA Platform.
  */
 
-}
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog
+     * get功能:Get a list of analysis data source ids.
+     */
+    DataSourceList getAnalysisDataSourceIds ()throws IOException;
 
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog/{catalogId }
+     * get功能:Download the analysis files for a given analysis id.
+     * @param catalogId 例如:youpin_kdwh_srm,可从上一个接口查询
+     * @return 文件内容
+     */
+    String downloadAnalysisFile (String catalogId) throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog/{catalogId }
+     * delete功能:Remove the analysis data for a given analysis ID.
+     * @param catalogId 例如:youpin_kdwh_srm,可从 getAnalysisDataSourceIds()查询
+     */
+    void deleteAnalysisFile (String catalogId)throws IOException;
+
+    /**    ???---> 此接口比较奇怪,catalogId处随便填点什么就行了... 最后显示的Datasource名称由上传的xml文件的schema name决定
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog/{catalogId }
+     * @param catalogId 随便填?
+     * @param fileName  文件绝对路径,A Mondrian schema XML file.
+     * @param overwrite Flag for overwriting existing version of the file
+     * @param xmlaEnabledFlag Is XMLA enabled or not.
+     * @param parameters  说明: requestBody中必须有 key="parameters",value="Datasource=(youpin_bi_srm)" ,其中(youpin_bi_srm)
+     *                    保存了带有jdbc的数据源,即和数据库连接.故在接口的实现中,直接将此参数作为datasource传入,即传入(youpin_bi_srm).
+     * put功能:Import Analysis Schema.   注:所有参数均不能为空
+     */
+    void importAnalysisSchema (String catalogId,String fileName,boolean overwrite,boolean xmlaEnabledFlag,String parameters)throws IOException;
+}
 

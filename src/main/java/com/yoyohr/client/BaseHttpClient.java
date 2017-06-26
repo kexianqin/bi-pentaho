@@ -3,6 +3,7 @@ package com.yoyohr.client;
 import org.apache.http.*;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -137,13 +138,6 @@ public class BaseHttpClient {
             params.forEach((String key, String value) ->
                 nvps.add(new BasicNameValuePair(key, value))
             );
-            //  也可以使用以下方法
-//            Set paramss=params.entrySet();
-//            Iterator it =paramss.iterator();
-//            while(it.hasNext()){
-//                Map.Entry paramsss=(Map.Entry)it.next();
-//                nvps.add(new BasicNameValuePair((String)paramsss.getKey(),(String)paramsss.getValue()));
-//            }
             request.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
         }
         if (mediaType != null) {
@@ -155,7 +149,7 @@ public class BaseHttpClient {
 
 
     /**
-     * 用于上传文件.
+     * 用于上传文件(post方式)
      * @param url
      * @param filename (绝对路径)
      * @return
@@ -173,7 +167,6 @@ public class BaseHttpClient {
             .addPart("fileUpload",new FileBody(new File(filename)))
             //.addTextBody("overwrite","true") //用作添加text形式的parameter.
             .setContentType(ContentType.MULTIPART_FORM_DATA).build();
-
         request.setEntity(httpEntity);
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
@@ -222,6 +215,44 @@ public class BaseHttpClient {
         return httpClient.execute(
             target, request, (HttpResponse response) -> handleResponseAsString(response), context);
     }
+    /**
+     *以put方式上传文件
+     * @param fileKey 以form-data形式上传文件的key值
+     * @param filename 上传文件的绝对路径,也就是value值
+     * @param formData 一些其他的form-data
+     */
+    public Response putUpload(String url, String fileKey,String filename, Map<String, String> formData) throws IOException {
+        HttpPut request = new HttpPut(url);
+        request.addHeader("Authorization", generateAuthorizationToken());
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        if(formData!=null){
+            formData.forEach((String key,String value)-> multipartEntityBuilder.addTextBody(key,value));
+        }
+        HttpEntity httpEntity = multipartEntityBuilder
+            .addPart(fileKey,new FileBody(new File(filename)))
+            .setContentType(ContentType.MULTIPART_FORM_DATA).build();
+        request.setEntity(httpEntity);
+        return httpClient.execute(
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+    }
+
+
+
+
+
+    public Response delete(String url) throws IOException {
+        String requestUri = url;
+        HttpDelete request = new HttpDelete(requestUri);
+        /**
+         * 基本认证
+         */
+        request.addHeader("Authorization", generateAuthorizationToken());
+        return httpClient.execute(
+            target, request, (HttpResponse response) -> handleResponseAsString(response), context);
+    }
+
+
+
 
     public void close() throws IOException {
         httpClient.close();

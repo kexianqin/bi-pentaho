@@ -7,8 +7,9 @@ import com.yoyohr.client.resource.Resource;
  */
 public class BaseResource extends Resource{
 
+    public static final String API = "/api";
+    public static final String PLUGIN= "/plugin";
 
-
-    }
+  }
 
 

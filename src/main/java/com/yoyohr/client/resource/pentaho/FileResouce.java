@@ -16,7 +16,7 @@ public class FileResouce extends BaseResource{
 
     private static final Logger log = LoggerFactory.getLogger(FileResouce.class);
 
-    public static final String PENTAHO_API = "/api/repo/files";
+    public static final String PENTAHO_API = API+"/repo/files";
 
 
     public RepositoryFileDto parseRepositoryFileDto() throws IOException{
