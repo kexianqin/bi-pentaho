@@ -1,9 +1,11 @@
 package com.yoyohr.client;
-import com.yoyohr.client.resource.pentaho.AnalysisResouce;
+import com.yoyohr.client.resource.pentaho.AnalysisResource;
 import com.yoyohr.client.resource.pentaho.FileResouce;
+import com.yoyohr.client.resource.pentaho.JdbcResource;
+import com.yoyohr.client.resource.pentaho.MetadataResource;
 import com.yoyohr.client.resource.pentaho.bean.*;
+import com.yoyohr.util.JsonUtil;
 import com.yoyohr.util.PropertiesReader;
-import com.yoyohr.util.XmlUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -14,9 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -454,21 +454,21 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
 
     @Override
     public DataSourceList getAnalysisDataSourceIds() throws IOException {
-        AnalysisResouce resouce =new AnalysisResouce();
-        String requestUri=getApiUri(resouce.PENTAHO_API);
+        AnalysisResource resource =new AnalysisResource();
+        String requestUri=getApiUri(resource.PENTAHO_API);
         Response response =get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功获取了所有分析文件ID");
         }else{
             log.info("出现了问题");
         }
-        resouce.setResponse(response);
-        return resouce.parseDataSourceList();
+        resource.setResponse(response);
+        return resource.parseDataSourceList();
     }
 
     @Override
     public String downloadAnalysisFile(String catalogId) throws IOException {
-        AnalysisResouce resouce =new AnalysisResouce();
+        AnalysisResource resouce =new AnalysisResource();
         String requestUri=getApiUri(resouce.PENTAHO_API+"/"+catalogId);
         Response response =getFile(requestUri);
         if (response.getCode() == 0) {
@@ -481,7 +481,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
 
     @Override
     public void deleteAnalysisFile(String catalogId) throws IOException {
-        AnalysisResouce resouce =new AnalysisResouce();
+        AnalysisResource resouce =new AnalysisResource();
         String requestUri=getApiUri(resouce.PENTAHO_API+"/"+catalogId);
         Response response =delete(requestUri);
         if (response.getCode() == 0) {
@@ -493,7 +493,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
 
     @Override
     public void importAnalysisSchema(String catalogId, String fileName, boolean overwrite, boolean xmlaEnabledFlag, String datasource) throws IOException {
-        AnalysisResouce resouce =new AnalysisResouce();
+        AnalysisResource resouce =new AnalysisResource();
         String requestUri=getApiUri(resouce.PENTAHO_API+"/"+catalogId);
         HashMap<String,String> formData = new HashMap<>();
         formData.put("overwrite",String.valueOf(overwrite));
@@ -509,17 +509,137 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
         }
     }
 
+    @Override
+    public DataSourceList getJdbcDataSourceIds() throws IOException {
+        JdbcResource resource =new JdbcResource();
+        String requestUri=getApiUri(resource.PENTAHO_API);
+        Response response =get(requestUri,null,"application/xml");
+        if (response.getCode() == 0) {
+            log.info("成功获取了所有Jdbc数据源的ID");
+        }else{
+            log.info("出现了问题");
+        }
+        resource.setResponse(response);
+        return resource.parseDataSourceList();
+    }
+
+    @Override
+    public String downloadJdbcDataSourceConnection(String connectionId) throws IOException {
+        JdbcResource resource =new JdbcResource();
+        String requestUri=getApiUri(resource.PENTAHO_API+"/"+connectionId);
+        Response response =getFile(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功下载了"+connectionId);
+        }else{
+            log.info("下载出现了问题");
+        }
+        return response.getData();
+    }
+
+    @Override
+    public DatabaseConnectionJ getJdbcDataSourceConnection(String connectionId) throws IOException {
+        JdbcResource resource =new JdbcResource();
+        String requestUri=getApiUri(resource.PENTAHO_API+"/"+connectionId);
+        Response response =get(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功获得了"+connectionId);
+        }else{
+            log.info("出现了问题");
+        }
+        resource.setResponse(response);
+        return resource.parseDatabaseConnection();
+    }
+
+    @Override
+    public void addOrUpdateJdbcDataSourceConnection(String connectionId, String connectionName, String databaseTypeName,
+                                                    String hostname, String databasePort, String databaseName,
+                                                    String username, String password, boolean changed) throws IOException {
+        JdbcResource resource =new JdbcResource();
+        String requestUri=getApiUri(resource.PENTAHO_API+"/"+connectionId);
+        DatabaseConnectionJ databaseConnectionJ =new DatabaseConnectionJ(connectionName,databaseTypeName, hostname,
+                                                                databasePort, databaseName, username, password,changed);
+        String putData=JsonUtil.toJson(databaseConnectionJ);//根据传入的数值生成Json
+        Response response=put(requestUri,null,putData,"application/json");
+        if (response.getCode() == 0) {
+            log.info("成功上传或更新了JDBC数据源");
+        }
+        if (response.getCode() == 403) {
+            log.info("或许缺少了一些必要的关键信息");
+        }
+        if (response.getCode() == 500) {
+            log.info("失败;若是上传,检查JDBC是否已存在;若是更新,检查connectionId");
+        }
+    }
+
+    @Override
+    public void deleteJdbcDataSourceConnection(String connectionId) throws IOException {
+        JdbcResource resource =new JdbcResource();
+        String requestUri=getApiUri(resource.PENTAHO_API+"/"+connectionId);
+        Response response = delete(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功删除了"+connectionId);
+        }else{
+            log.info("删除出现了问题");
+        }
+    }
+
+    @Override
+    public DataSourceList getMetadataDataSourceIds() throws IOException {
+        MetadataResource resource =new MetadataResource();
+        String requestUri = getApiUri(resource.PENTAHO_API);
+        Response response =get(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功获取了所有Metadata的ID");
+        }else{
+            log.info("出现了问题");
+        }
+        resource.setResponse(response);
+        return resource.parseDataSourceList();
+    }
+
+    @Override
+    public String downloadMetadataDatasource(String domainId) throws IOException {
+        MetadataResource resource =new MetadataResource();
+        String requestUri = getApiUri(resource.PENTAHO_API+"/"+domainId);
+        Response response =getFile(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功下载了"+domainId);
+        }else{
+            log.info("下载出现了问题");
+        }
+        return response.getData();
+    }
+
+    @Override
+    public void deleteMetadataDatasource(String domainId) throws IOException {
+        MetadataResource resource =new MetadataResource();
+        String requestUri = getApiUri(resource.PENTAHO_API+"/"+domainId);
+        Response response =delete(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功删除了"+domainId);
+        }else{
+            log.info("删除出现了问题");
+        }
+    }
+
 
     public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException,DocumentException{
         PentahoClient pentahoclient =new PentahoClient();
-        System.out.println(XmlUtil.convertToXml(pentahoclient.getAnalysisDataSourceIds()));
+//        System.out.println(XmlUtil.convertToXml(pentahoclient.getAnalysisDataSourceIds()));
 //        pentahoclient.downloadAnalysisFile("youpin_kdwh_srm");
 //        pentahoclient.deleteAnalysisFile("youpin_kdwh_srm");
-
 //        pentahoclient.importAnalysisSchema("lalalalalalalalalala",
 //            "C:/Users/Administrator/Desktop/youpin改版2017-05-26-6-1.xml",false,false,"AgileBI");
 
+//        System.out.println(XmlUtil.convertToXml(pentahoclient.getJdbcDataSourceIds()));
+//        System.out.println(pentahoclient.downloadJdbcDataSourceConnection("TestDataSourceResource"));
+//        System.out.println(JsonUtil.toJson(pentahoclient.getJdbcDataSourceConnection("youpin_test")));
+//        pentahoclient.addOrUpdateJdbcDataSourceConnection("lalal","youpin_kexianqin11","MySQL",
+//                                        "192.168.1.124","3306","youpin_kdwh_srm","root","123456",false);
+//        pentahoclient.deleteJdbcDataSourceConnection("youpin_kexianqin");
 
+//        System.out.println(pentahoclient.getMetadataDataSourceIds());
+        System.out.println(pentahoclient.downloadMetadataDatasource("steel-wheels"));
     }
 
 
@@ -537,7 +657,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient{
     }
 
     /**
-     * 通过访问 getFileACL 接口来获取文件或文件夹的ID
+     * 通过访问 getFileProperties 接口来获取文件或文件夹的ID
      * @param pathId
      * @return id of the file
      */

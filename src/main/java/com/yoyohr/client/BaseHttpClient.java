@@ -237,9 +237,6 @@ public class BaseHttpClient {
     }
 
 
-
-
-
     public Response delete(String url) throws IOException {
         String requestUri = url;
         HttpDelete request = new HttpDelete(requestUri);

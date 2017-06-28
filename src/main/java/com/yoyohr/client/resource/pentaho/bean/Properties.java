@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-@XmlType(name="properties",propOrder = {})
+@XmlType(propOrder = {"key","value"})
 public class Properties {
     @XmlElement
     private String key;

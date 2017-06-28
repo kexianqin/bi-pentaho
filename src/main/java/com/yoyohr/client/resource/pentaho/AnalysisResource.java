@@ -10,8 +10,8 @@ import java.io.IOException;
 /**
  * Created by Administrator on 2017/6/23.
  */
-public class AnalysisResouce extends BaseResource{
-    private static final Logger log = LoggerFactory.getLogger(FileResouce.class);
+public class AnalysisResource extends BaseResource{
+    private static final Logger log = LoggerFactory.getLogger(AnalysisResource.class);
 
     public static final String PENTAHO_API = PLUGIN+"/data-access/api/datasource/analysis/catalog";
 

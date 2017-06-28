@@ -252,7 +252,7 @@ public interface IPentahoClient {
      * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog/{catalogId }
      * get功能:Download the analysis files for a given analysis id.
      * @param catalogId 例如:youpin_kdwh_srm,可从上一个接口查询
-     * @return 文件内容
+     * @return 保存的文件名
      */
     String downloadAnalysisFile (String catalogId) throws IOException;
 
@@ -263,16 +263,87 @@ public interface IPentahoClient {
      */
     void deleteAnalysisFile (String catalogId)throws IOException;
 
-    /**    ???---> 此接口比较奇怪,catalogId处随便填点什么就行了... 最后显示的Datasource名称由上传的xml文件的schema name决定
+    /**    ???---> 此接口比较奇怪,catalogId处随便填点什么就行了... 最后显示的Datasource名称由上传的xml文件的schema name决定 如<Schema name="youpin_kdwh_srm">
      * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog/{catalogId }
      * @param catalogId 随便填?
      * @param fileName  文件绝对路径,A Mondrian schema XML file.
      * @param overwrite Flag for overwriting existing version of the file
      * @param xmlaEnabledFlag Is XMLA enabled or not.
-     * @param parameters  说明: requestBody中必须有 key="parameters",value="Datasource=(youpin_bi_srm)" ,其中(youpin_bi_srm)
-     *                    保存了带有jdbc的数据源,即和数据库连接.故在接口的实现中,直接将此参数作为datasource传入,即传入(youpin_bi_srm).
-     * put功能:Import Analysis Schema.   注:所有参数均不能为空
+     * @param parameters  说明: requestBody中必须有 key="parameters",value="Datasource=(youpin_kdwh_srm)" ,其中(youpin_kdwh_srm)
+     *                    保存了带有jdbc的数据源,即和数据库连接.故在接口的实现中,直接将此参数作为datasource传入,即传入(youpin_kdwh_srm).
+     * put功能:Import Analysis Schema.   注:所有参数均不能为空,否则访问出错
      */
     void importAnalysisSchema (String catalogId,String fileName,boolean overwrite,boolean xmlaEnabledFlag,String parameters)throws IOException;
-}
 
+
+/**
+ * ---------------------------------------- ↓JDBC Datasource Resource↓ -----------------------------------------------
+ * This service provides methods for listing, creating, downloading, uploading, and removal of JDBC data sources.
+ */
+
+    /**
+     *http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/jdbc/connection
+     * get功能:Get a list of JDBC datasource IDs.
+     */
+    DataSourceList getJdbcDataSourceIds ()throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/jdbc/connection/{connectionId }
+     * get功能:Export a JDBC datasource connection.
+     *          注意: !!-->下载文件到桌面,文件名为null(因为该接口未返回文件名),所以要下载多个文件,则在下好第一个后改名,否则会覆盖.
+     * @param connectionId JDBC连接名,可从上一个接口查询.
+     * @return 下载的文件名null.
+     */
+    String downloadJdbcDataSourceConnection (String connectionId) throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/jdbc/connection/{connectionId }
+     * get功能:和上面访问的是同一个接口,也是get,但是没有下载而是获得一个包含连接信息的DatabaseConnection对象.
+     * @param connectionId JDBC连接名,可从getJdbcDataSourceIds()查询.
+     * @return 包含连接信息的DatabaseConnection对象.
+     */
+    DatabaseConnectionJ getJdbcDataSourceConnection(String connectionId) throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/jdbc/connection/{connectionId }
+     * put功能:Add or update a JDBC datasource connection.  post内容只能使用json格式.
+     * @param connectionId 当changed为false时,可以随意命名;当changed为true时,connectionId就是要更新的jdbc名字.
+     *          注意:若是数据库名称,密码等参数和实际不符,也会显示JDBC上传成功,但是不能正常连接到数据库.
+     */
+    void addOrUpdateJdbcDataSourceConnection(String connectionId,String connectionName, String databaseTypeName,
+                                             String hostname, String databasePort,String databaseName,String username,
+                                             String password,boolean changed)  throws IOException;
+
+    /**
+     *  http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/jdbc/connection/{connectionId }
+     * delete功能:Remove the JDBC data source for a given JDBC ID.
+     */
+    void deleteJdbcDataSourceConnection(String connectionId)  throws IOException;
+
+/**
+ * ---------------------------------------- ↓Metadata Resource↓ ------------------------------------------------------
+ * This service allows for listing, download, and removal of Metadata data sources in the BA Platform.
+ */
+
+    /**
+     *http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/metadata/domain
+     * get功能:Get the Metadata datasource IDs.
+     */
+    DataSourceList getMetadataDataSourceIds()throws IOException;
+
+    /**
+     *http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/metadata/domain/{domainId }
+     * get功能:Export a metadata datasource.
+     * @param domainId 可从getMetadataDataSourceIds()查询.
+     * @return 下载的文件名
+     */
+    String downloadMetadataDatasource (String domainId)throws IOException;
+
+    /**
+     *http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/metadata/domain/{domainId }
+     * delete功能:Remove the metadata for a given metadata ID.
+     * @param domainId 可从getMetadataDataSourceIds()查询.
+     * @return 下载的文件名
+     */
+    void deleteMetadataDatasource (String domainId)throws IOException;
+}
