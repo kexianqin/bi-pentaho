@@ -99,7 +99,7 @@ public interface ISaikuClient {
 
     /**
      * https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/{catalog}/{schema}/{cube
-     * }/member/{member}
+     * }/member/{member}      (measures 下面的)
      */
     SaikuMember getRestSaikuMember(String saikuCubeUniqueName, String memberName) throws IOException;
 
@@ -116,14 +116,32 @@ public interface ISaikuClient {
     QueryResult executeSaikuQuery(String cubeUniqueName, String mdx) throws IOException;
 
     /**
-     *  访问https://pentaho.yoyohr.com/saiku/rest/saiku/{username}/discover/{connection}/{catalog}/{schema}/{caption}/metadata
-     * @return
-     * @throws IOException
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/admin/datasources
+     * Used to get all the available data sources on the platform
      */
-//    SaikuDimensionAndMeasure getRestOlapDimensions() throws IOException;
+    List<SaikuAdminDatasource> getAvailableAdminDataSources() throws IOException;
 
-    
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/api/admin/schema
+     * Get all the available schema
+     */
+    List<SaikuAdminMondrianSchema> getAvailableAdminMondrianSchemas() throws IOException;
 
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/api/admin/schema/{id 例如foodmart4.xml}
+     * Get Saved Schema By ID
+     */
+    String getSavedSchema(String id) throws IOException;
 
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/api/admin/users
+     * Get existing Saiku users from the Saiku server
+     */
+    List<SaikuAdminUser> getExistingAdminUsers() throws IOException;
 
+    /**
+     * https://pentaho.yoyohr.com/saiku/rest/saiku/api/admin/users/{id 例如1(每个user下面都有一个id)}
+     * Get user details for a user in the Saiku server
+     */
+    SaikuAdminUser getUserDetails(int id) throws IOException;
 }

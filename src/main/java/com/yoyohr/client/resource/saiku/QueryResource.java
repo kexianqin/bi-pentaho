@@ -29,7 +29,7 @@ public class QueryResource extends BaseResource {
         return query.toJson();
     }
 
-    public QueryResult parseQueryResult() {
+    public QueryResult parseQueryResult(){
         log.info(response.getData());
         return JsonUtil.parseJson(response.getData(), QueryResult.class);
     }
@@ -38,5 +38,4 @@ public class QueryResource extends BaseResource {
         String[] names = cubeUniqueName.replaceAll("\\[", "").replaceAll("]", "").split("\\.");
         return new SaikuCube(names[0], cubeUniqueName, names[3], null, names[1], names[2]);
     }
-
 }

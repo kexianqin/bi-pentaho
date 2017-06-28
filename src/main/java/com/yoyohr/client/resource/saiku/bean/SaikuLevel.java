@@ -73,8 +73,6 @@ public class SaikuLevel extends AbstractSaikuObject {
                 m.put(entry.getKey(), entry.getValue());
             }
         }
-
-
         return m;
     }
 

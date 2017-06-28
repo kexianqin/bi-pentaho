@@ -9,6 +9,7 @@ import org.dom4j.io.SAXReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+
 /**
  * Summary
  *
@@ -20,9 +21,13 @@ public class XmlReader {
     private Document document;
     private Element root;
 
-    public XmlReader(String xml) throws IOException, DocumentException {
+    public XmlReader(String xml) throws IOException{
         saxReader = new SAXReader();
-        document = saxReader.read(new ByteArrayInputStream(xml.getBytes(BaseHttpClient.DEFAULT_CHARSET)));
+        try {
+            document = saxReader.read(new ByteArrayInputStream(xml.getBytes(BaseHttpClient.DEFAULT_CHARSET)));
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
         root = document.getRootElement();
     }
 
@@ -35,3 +40,4 @@ public class XmlReader {
     }
 
 }
+

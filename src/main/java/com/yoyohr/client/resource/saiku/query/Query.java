@@ -13,6 +13,18 @@ import java.util.Map;
  * Summary
  *
  * @author Leo <jiangwenhua@yoyohr.com>
+ eg:
+{queryModel: {},…}
+%%%%%%%%%%%%%%%%%%%%%%%%% cube:{uniqueName: "[youpin_dwh].[youpin_dwh].[youpin_dwh].[youpin_dwh]", name: "youpin_dwh",…}
+%%%%%%%%%%%%%%%%%%%%%%%%% mdx:"WITH↵SET [~ROWS] AS↵    {[enterprise].[enterprise].[enterprise_name].Members}↵SELECT↵NON EMPTY {[Measures].[action_key]} ON COLUMNS,↵NON EMPTY [~ROWS] ON ROWS↵FROM [youpin_dwh]"
+metadata:{}
+%%%%%%%%%%%%%%%%%%%%%%%%% name:"762B40D1-71AB-9442-BE9F-DAECF9C0E22B"
+parameters:{}
+plugins:{}
+properties:{saiku.olap.query.automatic_execution: true, saiku.olap.query.nonempty: true,…}
+queryModel:{}
+%%%%%%%%%%%%%%%%%%%%%%%%% queryType:"OLAP"
+%%%%%%%%%%%%%%%%%%%%%%%%% type:"MDX"
  */
 public class Query {
     public static final Logger log = LoggerFactory.getLogger(Query.class);
@@ -20,7 +32,7 @@ public class Query {
     private QueryModel queryModel;
     private SaikuCube cube;
     private String mdx;
-    private String name;
+    private String name;  //随机
     private Map<String, String> parameters = new HashMap<>();
     private Map<String, String> plugins = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();
@@ -126,5 +138,4 @@ public class Query {
         log.info(result);
         return result;
     }
-
 }

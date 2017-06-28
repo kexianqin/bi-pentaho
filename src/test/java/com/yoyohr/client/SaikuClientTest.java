@@ -57,7 +57,7 @@ public class SaikuClientTest extends AbstractTest {
     public void testGetRestOlapConnectionn() throws IOException {
         assertThat(client.getRestOlapConnection("youpin_dwh").get(0))
             .isInstanceOf(SaikuConnection.class);
-    }
+}
 
     @Test
     public void testRefreshRestOlapConnection() throws IOException {
@@ -148,9 +148,10 @@ public class SaikuClientTest extends AbstractTest {
         assertThat(client.executeSaikuQuery(saikuCubeUniqueName, mdx))
             .isInstanceOf(QueryResult.class);
     }
-
     @After
     public void tearDown() throws Exception {
         client.close();
     }
+
+
 }
