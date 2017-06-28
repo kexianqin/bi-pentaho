@@ -1,7 +1,6 @@
 package com.yoyohr.client;
 
 import com.yoyohr.client.resource.saiku.BaseResource;
-import com.yoyohr.client.resource.saiku.OlapMetadataResource;
 import com.yoyohr.client.resource.saiku.OlapDiscoverResource;
 import com.yoyohr.client.resource.saiku.QueryResource;
 import com.yoyohr.client.resource.saiku.SessionResource;
@@ -13,7 +12,6 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,16 +41,16 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
     private SaikuSession saikuSession;
 
     /**
-     *
      * @throws IOException
      * @throws URISyntaxException
      */
     public SaikuClient() throws IOException, URISyntaxException, UnanthenticatedException {
         log.info("SaikuClient Constructing...");
-        target = new HttpHost(SAIKU_HOST, -1, SAIKU_PROTOCOL);//使用给定的协议，主机名和端口创建HttpHost实例,-1表示默认端口：http://pentaho.yoyohr.com
+        target = new HttpHost(SAIKU_HOST, 9090, SAIKU_PROTOCOL);//使用给定的协议，主机名和端口创建HttpHost实例,-1表示默认端口：http://pentaho
+        // .yoyohr.com
         cookieStore = new BasicCookieStore();
         httpClient = HttpClients.custom() // 即 new Httpclient()
-                .setDefaultCookieStore(cookieStore).build(); //将CookieStore设置到httpClient中
+            .setDefaultCookieStore(cookieStore).build(); //将CookieStore设置到httpClient中
 //        httpClient= HttpClients.createDefault();
         context = HttpClientContext.create();// ????
         setCookies();//登录
@@ -176,12 +174,12 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
 //    private void setCookies() throws IOException, URISyntaxException {
 
-//        HttpUriRequest login = RequestBuilder.post()
+    //        HttpUriRequest login = RequestBuilder.post()
 //                .setUri(new URI(getApiUri(SessionResource.SESSION)))
 //                .addParameter("username", SAIKU_USERNAME)
 //                .addParameter("password", SAIKU_PASSWORD)
 //                .build();
-        //HttpUriRequest:HttpRequest接口的扩展版本，提供方便的方法来访问请求属性，如请求URI和方法类型。 RequestBuilder:HttpUriRequest实例的构建器。
+    //HttpUriRequest:HttpRequest接口的扩展版本，提供方便的方法来访问请求属性，如请求URI和方法类型。 RequestBuilder:HttpUriRequest实例的构建器。
 //        HttpUriRequest login = RequestBuilder.post()
 //                .setUri(new URI(getApiUri(SessionResource.SESSION)))
 //                .addParameters(new BasicNameValuePair("username", SAIKU_USERNAME), new BasicNameValuePair("password", SAIKU_PASSWORD))
@@ -286,6 +284,7 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
 
     /**
      * 得到要访问的url地址，传入的endpoint为尾缀
+     *
      * @param endpoint
      * @return
      */
@@ -295,11 +294,20 @@ public class SaikuClient extends BaseHttpClient implements ISaikuClient {
         return uri;
     }
 
-//    public static void main(String[] args) throws IOException, URISyntaxException, UnanthenticatedException {
-//        SaikuClient client = new SaikuClient();
-//        log.info(client.getRestOlapConnections().toString());
+    public static void main(String[] args) throws IOException, URISyntaxException, UnanthenticatedException {
+        SaikuClient client = new SaikuClient();
+//        log.info(client.getRestSaikuSession());
+        log.info(client.getResource());
 //        log.info(client.getRestOlapDimensions().toString());
-//        log.info("ok");
-//    }
+        log.info("ok");
+    }
+
+    public String getResource() throws IOException {
+//        String url = this.getApiUri("/api/repository?type=saiku");
+        //https://saiku.yoyohr.com/saiku/rest/saiku
+        String url = getApiUri("/admin/version");
+        return get(url).getData();
+
+    }
 
 }

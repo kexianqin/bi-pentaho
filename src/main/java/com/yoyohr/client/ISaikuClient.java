@@ -122,4 +122,8 @@ public interface ISaikuClient {
      */
 //    SaikuDimensionAndMeasure getRestOlapDimensions() throws IOException;
 
+    
+
+
+
 }
