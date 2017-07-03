@@ -10,6 +10,8 @@ public class BaseResource extends Resource{
     public static final String API = "/api";
     public static final String PLUGIN= "/plugin";
 
+    public static final String DATASOURCE_API="/plugin/data-access/api/datasource";
+
   }
 
 

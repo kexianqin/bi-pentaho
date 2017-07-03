@@ -23,14 +23,7 @@ public class IndexController {
      public String index(){
         return "init";
     }
-//    @RequestMapping("/login")
-//    public String login() {
-//        return "login";
-//    }
-//    @RequestMapping("/logout")
-//    public String logout() {
-//        return "logout";
-//    }
+
     @RequestMapping("/error/priv_error")
     public String error() {
         return "priv_error";

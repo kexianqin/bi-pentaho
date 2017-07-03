@@ -1,6 +1,9 @@
 package com.yoyohr.client;
 
 import com.yoyohr.client.resource.pentaho.bean.*;
+import com.yoyohr.client.resource.pentaho.query.OlapCubeStructure;
+import com.yoyohr.client.resource.pentaho.query.OlapCubes;
+import com.yoyohr.client.resource.pentaho.query.QueryResult;
 
 import java.io.IOException;
 
@@ -249,9 +252,17 @@ public interface IPentahoClient {
     DataSourceList getAnalysisDataSourceIds ()throws IOException;
 
     /**
+     * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/{catalogId }/getAnalysisDatasourceInfo
+     * @param catalogId AnalysisDataSource的名称,可从getAnalysisDataSourceIds()接口查询
+     * get功能:返回AnalysisDataSource的信息
+     * @return 字符串格式,例如: DataSource=youpin_kdwh_srm;EnableXmla=false;Provider=mondrian;Datasource="youpin_kdwh_srm";overwrite="false"
+     */
+    String getAnalysisDataSourceInfo (String catalogId)throws IOException;
+
+    /**
      * http://192.168.1.124:9090/pentaho/plugin/data-access/api/datasource/analysis/catalog/{catalogId }
      * get功能:Download the analysis files for a given analysis id.
-     * @param catalogId 例如:youpin_kdwh_srm,可从上一个接口查询
+     * @param catalogId 例如:youpin_kdwh_srm,可从 getAnalysisDataSourceIds()接口查询
      * @return 保存的文件名
      */
     String downloadAnalysisFile (String catalogId) throws IOException;
@@ -346,4 +357,34 @@ public interface IPentahoClient {
      * @return 下载的文件名
      */
     void deleteMetadataDatasource (String domainId)throws IOException;
+
+/**
+ * ---------------------------------------- ↓Query↓ ------------------------------------------------------------------
+ * 用作查询的各种接口
+ */
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/pentaho-cdf-dd/api/olap/getCubes
+     * get功能:返回所有能够作为查询的catalogs以及下面的cubes.
+     */
+    OlapCubes getOlapCubes()throws IOException;
+
+    /**
+     *http://192.168.1.124:9090/pentaho/plugin/pentaho-cdf-dd/api/olap/getCubeStructure?catalog={catalogId }&cube={cubeId }
+     * get功能:查询指定的cube结构,即 measures,dimension,hierarchy之类
+     */
+    OlapCubeStructure getCubeStructure(String catalog,String cube)throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/cda/api/doQuery?path={path }&dataAccessId={dataAccessId }
+     * @param path 以/隔开的包含文件的完整路径 eg:home/youpin/iLoveYou.cda
+     * @param dataAccessId 查询的Id(即为这个query取的名称)
+     * @param catalogId 也即analysis dataSource, eg:youpin_kdwh_srm,一个mondrian schema文件.
+     * @param mdx mdx查询语句
+     * @return mdx查询结果
+     * 注:若不加 catalogId,mdx 这两个参数,则是查询已存在的查询.(要正确填写path,dataAccessId确保能够找到该查询)
+     *  path 如果存在,则在已存在文件进行查询操作;若不存在,则新建path文件,在新文件中查询.
+     *  dataAccessId 如果存在,则新建查询会覆盖原有查询(之前的会被删除);如果不存在,则新建名字为dataAccessId的查询.
+     */
+    QueryResult doQuery(String path,String dataAccessId,String catalogId,String mdx) throws IOException;
 }

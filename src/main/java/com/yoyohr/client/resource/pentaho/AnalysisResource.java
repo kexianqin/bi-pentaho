@@ -13,7 +13,7 @@ import java.io.IOException;
 public class AnalysisResource extends BaseResource{
     private static final Logger log = LoggerFactory.getLogger(AnalysisResource.class);
 
-    public static final String PENTAHO_API = PLUGIN+"/data-access/api/datasource/analysis/catalog";
+    public static final String PENTAHO_API = DATASOURCE_API+"/analysis/catalog";
 
     public DataSourceList parseDataSourceList() throws IOException {
         log.info(response.getData());

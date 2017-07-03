@@ -12,9 +12,9 @@ import java.io.IOException;
 /**
  * Created by Administrator on 2017/6/20.
  */
-public class FileResouce extends BaseResource{
+public class FileResource extends BaseResource{
 
-    private static final Logger log = LoggerFactory.getLogger(FileResouce.class);
+    private static final Logger log = LoggerFactory.getLogger(FileResource.class);
 
     public static final String PENTAHO_API = API+"/repo/files";
 

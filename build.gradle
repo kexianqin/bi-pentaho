@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')//Spring通过添加spring-boot-starter-*这样的依赖就能支持具体的某个功能。
-    // 我们这个示例最终是要实现web功能，所以添加的是这个依赖。
+    // 我们最终是要实现web功能，所以添加的是这个依赖。
     compile("org.springframework.boot:spring-boot-devtools")   //包含热部署
 
     //compile("org.springframework.boot:spring-boot-starter-security")  //安全认证,用于账号密码

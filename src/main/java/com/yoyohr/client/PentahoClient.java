@@ -1,10 +1,10 @@
 package com.yoyohr.client;
 
-import com.yoyohr.client.resource.pentaho.AnalysisResource;
-import com.yoyohr.client.resource.pentaho.FileResouce;
-import com.yoyohr.client.resource.pentaho.JdbcResource;
-import com.yoyohr.client.resource.pentaho.MetadataResource;
+import com.yoyohr.client.resource.pentaho.*;
 import com.yoyohr.client.resource.pentaho.bean.*;
+import com.yoyohr.client.resource.pentaho.query.OlapCubeStructure;
+import com.yoyohr.client.resource.pentaho.query.OlapCubes;
+import com.yoyohr.client.resource.pentaho.query.QueryResult;
 import com.yoyohr.util.JsonUtil;
 import com.yoyohr.util.PropertiesReader;
 import org.apache.commons.codec.binary.Base64;
@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.yoyohr.client.resource.pentaho.BaseResource.DATASOURCE_API;
 
 
 /**
@@ -36,7 +38,7 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     public static final String PENTAHO_CONTEXT = PropertiesReader.getValue("pentaho.context");
 
     public PentahoClient() {
-        log.info("SaikuClient Constructing...");
+        log.info("PentahoClient Constructing...");
         target = new HttpHost(PENTAHO_HOST, 9090, PENTAHO_PROTOCOL);
         httpClient = HttpClients.createDefault();
         context = HttpClientContext.create();
@@ -68,8 +70,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void filesBackup() throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/backup");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/backup");
         Response response = getFile(requestUri);
         if (response.getCode() == 0) {
             log.info("备份成功,请查看桌面");
@@ -82,8 +84,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void filesSystemRestore(String fileName, Boolean overwrite) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/systemRestore");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/systemRestore");
         Map<String, String> formData = new HashMap<>();
         formData.put("overwrite", String.valueOf(overwrite));
         Response response = upload(requestUri, fileName, formData);
@@ -98,8 +100,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public RepositoryFileAclDto getFileACL(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/acl");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/acl");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功返回请求的文件权限");
@@ -107,14 +109,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 500) {
             log.info("未找到对应文件,可能是由无效路径或不存在的文件造成的");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileAclDto();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileAclDto();
     }
 
     @Override
     public void deleteFiles(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/delete");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/delete");
         String fileId = getFileId(pathId);
         Response response = put(requestUri, fileId);
         if (response.getCode() == 0) {
@@ -127,8 +129,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void deleteFilesPermanent(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/deletepermanent");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/deletepermanent");
         String fileId = getFileId(pathId);
         Response response = put(requestUri, fileId);
         if (response.getCode() == 0) {
@@ -141,11 +143,11 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void createFile(String pathId, String stringContent) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId);
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId);
         Response response = put(requestUri, stringContent);
         if (response.getCode() == 0) {
-            log.info("成功创建文件");
+            log.info("成功创建文件"+pathId);
         }
         if (response.getCode() == 500) {
             log.info("文件创建失败:" + response.getData());
@@ -154,8 +156,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public String getFileContent(String pathId, Boolean download) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId);
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId);
         if (download == true) {
             Response response = getFile(requestUri);
             if (response.getCode() == 0) {
@@ -179,36 +181,36 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public RepositoryFileDtoes getChildFiles(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/children");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/children");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功获取" + pathId + "下所有文件");
         } else {
             log.info("啊哦出错了");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileDtoes();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileDtoes();
     }
 
     @Override
     public RepositoryFileDtoes getRootChildFiles() throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/children");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/children");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功获取根目录下所有文件");
         } else {
             log.info("啊哦出错了");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileDtoes();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileDtoes();
     }
 
     @Override
     public void createDir(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/createDir");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/createDir");
         Response response = put(requestUri);
         if (response.getData().equals("couldNotCreateFolderDuplicate") && response.getCode() == 409) {
             log.info(pathId + "该文件夹已存在");
@@ -220,8 +222,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public RepositoryFileTreeDto getFilesTree(int depth, String filter, Boolean showHidden, Boolean includeAcls) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/tree");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/tree");
         Map params = new HashMap<String, String>();
         if (depth != -1) {
             params.put("depth", String.valueOf(depth));
@@ -245,14 +247,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 500) {
             log.info("Server Error");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileTreeDto();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileTreeDto();
     }
 
     @Override
     public RepositoryFileTreeDto getSelectedFilesTree(String pathId, int depth, String filter, Boolean showHidden, Boolean includeAcls) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/tree");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/tree");
         Map params = new HashMap<String, String>();
         if (depth != -1) {
             params.put("depth", String.valueOf(depth));
@@ -276,14 +278,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 500) {
             log.info("Server Error");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileTreeDto();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileTreeDto();
     }
 
     @Override
     public String reservedCharactersDisplay() throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/reservedCharactersDisplay");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/reservedCharactersDisplay");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功获取保留字符串");
@@ -293,8 +295,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public String getReservedCharacters() throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/reservedCharacters");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/reservedCharacters");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功获取保留字符串");
@@ -304,10 +306,10 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public RepositoryFileDto getPropertiesOfRootDirectory() throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/properties");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/properties");
         Response response = get(requestUri);
-        resouce.setResponse(response);
+        resource.setResponse(response);
         log.info(response.getData());
         if (response.getCode() == 0) {
             log.info("成功获得根目录属性");
@@ -318,13 +320,13 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 500) {
             log.info("啊哦出错了");
         }
-        return resouce.parseRepositoryFileDto();
+        return resource.parseRepositoryFileDto();
     }
 
     @Override
     public RepositoryFileDtoes retrieveTrashFolder() throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/deleted");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/deleted");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("成功获得垃圾文件");
@@ -332,14 +334,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 500) {
             log.info("Server Error");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileDtoes();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileDtoes();
     }
 
     @Override
     public void renameFile(String pathId, String newName) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/rename?newName=" + newName);
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/rename?newName=" + newName);
         Response response = put(requestUri);
         if (response.getCode() == 0) {
             log.info("改名成功");
@@ -351,8 +353,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public RepositoryFileDto getFileProperties(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/properties");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/properties");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("查看文件(夹)属性成功");
@@ -360,14 +362,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 204) {
             log.info("文件(夹)路径无效");
         }
-        resouce.setResponse(response);
-        return resouce.parseRepositoryFileDto();
+        resource.setResponse(response);
+        return resource.parseRepositoryFileDto();
     }
 
     @Override
     public StringKeyStringValueDtos getFileMetadata(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/metadata");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/metadata");
         Response response = get(requestUri);
         if (response.getCode() == 0) {
             log.info("查看文件(夹)元数据成功");
@@ -375,14 +377,14 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         if (response.getCode() == 204) {
             log.info("文件(夹)路径无效");
         }
-        resouce.setResponse(response);
-        return resouce.parseStringKeyStringValueDtos();
+        resource.setResponse(response);
+        return resource.parseStringKeyStringValueDtos();
     }
 
     @Override
     public void putFileMetadata(String pathId, String metadata) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/metadata");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/metadata");
         Response response = put(requestUri, null, metadata, "application/json");
         if (response.getCode() == 0) {
             log.info("文件(夹)元数据put成功");
@@ -397,8 +399,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void downloadFile(String pathId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + pathId + "/download");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId + "/download");
         Response response = getFile(requestUri);
         if (response.getCode() == 0) {
             log.info("下载成功");
@@ -413,8 +415,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void restoreFile(String FileId) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/restore");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/restore");
         Response response = put(requestUri, FileId);
         if (response.getCode() == 0) {
             log.info("文件还原成功!");
@@ -425,8 +427,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void importFile(String fileName, String DirName) throws IOException {
-        FileResouce resouce = new FileResouce();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/import");
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/import");
         HashMap<String, String> formData = new HashMap<>();
         formData.put("importDir", DirName);
         Response response = upload(requestUri, fileName, formData);
@@ -476,9 +478,22 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
     }
 
     @Override
+    public String getAnalysisDataSourceInfo(String catalogId) throws IOException {
+        AnalysisResource resource = new AnalysisResource();
+        String requestUri = getApiUri(DATASOURCE_API+"/"+catalogId+"/getAnalysisDatasourceInfo");
+        Response response = get(requestUri);
+        if (response.getCode() == 0) {
+            log.info("成功获取了"+catalogId+"的配置信息");
+        } else {
+            log.info("出现了问题");
+        }
+        return response.getData();
+    }
+
+    @Override
     public String downloadAnalysisFile(String catalogId) throws IOException {
-        AnalysisResource resouce = new AnalysisResource();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + catalogId);
+        AnalysisResource resource = new AnalysisResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + catalogId);
         Response response = getFile(requestUri);
         if (response.getCode() == 0) {
             log.info("成功下载了" + catalogId);
@@ -490,8 +505,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void deleteAnalysisFile(String catalogId) throws IOException {
-        AnalysisResource resouce = new AnalysisResource();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + catalogId);
+        AnalysisResource resource = new AnalysisResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + catalogId);
         Response response = delete(requestUri);
         if (response.getCode() == 0) {
             log.info("成功删除了" + catalogId);
@@ -502,8 +517,8 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
     @Override
     public void importAnalysisSchema(String catalogId, String fileName, boolean overwrite, boolean xmlaEnabledFlag, String datasource) throws IOException {
-        AnalysisResource resouce = new AnalysisResource();
-        String requestUri = getApiUri(resouce.PENTAHO_API + "/" + catalogId);
+        AnalysisResource resource = new AnalysisResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + catalogId);
         HashMap<String, String> formData = new HashMap<>();
         formData.put("overwrite", String.valueOf(overwrite));
         formData.put("xmlaEnabledFlag", String.valueOf(xmlaEnabledFlag));
@@ -631,24 +646,108 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         }
     }
 
+    /**
+ *------------------------------------------------------↓ Query↓ -----------------------------------------------------
+ * */
+
+    @Override
+    public OlapCubes getOlapCubes() throws IOException {
+        QueryResource resourse = new QueryResource();
+        String requestUri=getApiUri(resourse.PLUGIN+"/pentaho-cdf-dd/api/olap/getCubes");
+        Response response=get(requestUri);
+        resourse.setResponse(response);
+        if (response.getCode() == 0) {
+            log.info("成功获得了所有OLAP Cubes");
+        } else {
+            log.info("出现了问题");
+        }
+        return resourse.parseOlapCubes();
+    }
+
+    @Override
+    public OlapCubeStructure getCubeStructure(String catalog, String cube) throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri=getApiUri(resource.PLUGIN+"/pentaho-cdf-dd/api/olap/getCubeStructure");
+        Map<String,String> params = new HashMap<>();
+        params.put("catalog",catalog);
+        params.put("cube",cube);
+        Response response=get(requestUri,params);
+        resource.setResponse(response);
+        if (response.getCode() == 0) {
+            log.info("成功获得了"+"catalog为"+catalog+",cube为"+cube+"的structure");
+        } else {
+            log.info("出现了问题");
+        }
+        return resource.parseOlapCubeStructure();
+    }
+
+    /**
+     * 查询已有查询,dataAccessId为已存在的查询名称
+     */
+    public QueryResult doQuery(String path,String dataAccessId) throws IOException {
+        return doQuery(path,dataAccessId,null,null);
+    }
+
+    /**
+     * 新建查询,dataAccessId为新建的查询名称
+     */
+    @Override
+    public QueryResult doQuery(String path,String dataAccessId,String catalogId,String mdx) throws IOException {
+        QueryResource resource = new QueryResource();
+        if (fileExists(path)) {//判断该文件是否存在,若存在,则是在此文件中进行操作(新建或查询已有查询)
+            if (mdx != null) {//判断是否是新建查询
+                resource.addCDAfileContent(path.replace("/", ":"), dataAccessId, catalogId, mdx);
+            }
+        }else{//若文件不存在,则新建文件
+            resource.generateCDAfile(path.replace("/", ":"), dataAccessId, catalogId, mdx);
+        }
+        String requestUri=getApiUri(resource.PLUGIN+"/cda/api/doQuery");
+        Map<String,String> params = new HashMap<>();
+        params.put("path",path);
+        params.put("dataAccessId",dataAccessId);
+        Response response=get(requestUri,params);
+        resource.setResponse(response);
+        if (response.getCode() == 0) {
+            log.info("查询成功");
+        } else {
+            log.info("出现了问题");
+        }
+        return resource.parseQueryResult();
+    }
+
+
 
     public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException, DocumentException {
         PentahoClient pentahoclient = new PentahoClient();
-//        System.out.println(XmlUtil.convertToXml(pentahoclient.getAnalysisDataSourceIds()));
-//        pentahoclient.downloadAnalysisFile("youpin_kdwh_srm");
-//        pentahoclient.deleteAnalysisFile("youpin_kdwh_srm");
-//        pentahoclient.importAnalysisSchema("lalalalalalalalalala",
-//            "C:/Users/Administrator/Desktop/youpin改版2017-05-26-6-1.xml",false,false,"AgileBI");
+//        System.out.println(pentahoclient.getOlapCubes());
+//        System.out.println(JsonUtil.toJson(pentahoclient.getCubeStructure("youpin_kdwh_srm","youpin_kdwh_expense")));
 
-//        System.out.println(XmlUtil.convertToXml(pentahoclient.getJdbcDataSourceIds()));
-//        System.out.println(pentahoclient.downloadJdbcDataSourceConnection("TestDataSourceResource"));
-//        System.out.println(JsonUtil.toJson(pentahoclient.getJdbcDataSourceConnection("youpin_test")));
-//        pentahoclient.addOrUpdateJdbcDataSourceConnection("lalal","youpin_kexianqin11","MySQL",
-//                                        "192.168.1.124","3306","youpin_kdwh_srm","root","123456",false);
-//        pentahoclient.deleteJdbcDataSourceConnection("youpin_kexianqin");
+//        System.out.println(pentahoclient.getAnalysisDataSourceInfo("youpin_kdwh_srm"));
 
-//        System.out.println(pentahoclient.getMetadataDataSourceIds());
-        System.out.println(pentahoclient.downloadMetadataDatasource("steel-wheels"));
+        System.out.println(JsonUtil.toJson(pentahoclient.doQuery("home/youpin/iHateYou.cda","201707031722","youpin_kdwh_srm","select non empty[operator.operator].[operator_key].members on 1,[Measures].[action_numbers] on 0 from [youpin_kdwh_expense]")));
+//        System.out.println(JsonUtil.toJson(pentahoclient.doQuery("home/youpin/iLoveYou.cda","liuchen Beatiful?")));
+    }
+
+    /**
+     * 对 getFileContent 进行改造从而来判断某一文件是否存在
+     */
+    public boolean fileExists (String pathId){
+        boolean flag=true;
+        FileResource resource = new FileResource();
+        String requestUri = getApiUri(resource.PENTAHO_API + "/" + pathId);
+        Response response = null;
+        try {
+            response = get(requestUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response.getCode() == 0) {
+            flag=true;
+        }
+        if (response.getCode() == 404) {
+            flag=false;
+        }
+        return flag;
     }
 
 
