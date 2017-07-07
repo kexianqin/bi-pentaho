@@ -715,6 +715,77 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
         return resource.parseQueryResult();
     }
 
+    @Override
+    public void clearCache() throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri=getApiUri(resource.PLUGIN+"/cda/api/clearCache");
+        Response response=get(requestUri);
+        if (response.getCode() == 0) {
+            log.info("缓存成功清除");
+        } else {
+            log.info("缓存清除出现问题");
+        }
+    }
+
+    @Override
+    public QueryResult getCdaList() throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri=getApiUri(resource.PLUGIN+"/cda/api/getCdaList");
+        Response response=get(requestUri);
+        resource.setResponse(response);
+        if (response.getCode() == 0) {
+            log.info("已列出所有CDA文件");
+        } else {
+            log.info("列出CDA文件出现了问题");
+        }
+        return resource.parseQueryResult();
+    }
+
+    @Override
+    public QueryResult listQueries(String path) throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri=getApiUri(resource.PLUGIN+"/cda/api/listQueries");
+        Map<String,String> params = new HashMap<>();
+        params.put("path",path);
+        Response response=get(requestUri,params);
+        resource.setResponse(response);
+        if (response.getCode() == 0) {
+            log.info("已列出所有查询");
+        } else {
+            log.info("列出查询出现了问题");
+        }
+        return resource.parseQueryResult();
+    }
+
+    @Override
+    public String listDataAccessTypes() throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri=getApiUri(resource.PLUGIN+"/cda/api/listDataAccessTypes");
+        Response response=get(requestUri);
+        if (response.getCode() == 0) {
+            log.info("OK!");
+        } else {
+            log.info("Something Wrong!");
+        }
+        return response.getData();
+    }
+
+    @Override
+    public QueryResult listParameters(String path, String dataAccessId) throws IOException {
+        QueryResource resource = new QueryResource();
+        String requestUri=getApiUri(resource.PLUGIN+"/cda/api/listParameters");
+        Map<String,String> params = new HashMap<>();
+        params.put("path",path);
+        params.put("dataAccessId",dataAccessId);
+        Response response=get(requestUri,params);
+        resource.setResponse(response);
+        if (response.getCode() == 0) {
+            log.info("OK!");
+        } else {
+            log.info("Something Wrong!");
+        }
+        return resource.parseQueryResult();
+    }
 
 
     public static void main(String[] args) throws UnanthenticatedException, IOException, URISyntaxException, DocumentException {
@@ -724,8 +795,16 @@ public class PentahoClient extends BaseHttpClient implements IPentahoClient {
 
 //        System.out.println(pentahoclient.getAnalysisDataSourceInfo("youpin_kdwh_srm"));
 
-        System.out.println(JsonUtil.toJson(pentahoclient.doQuery("home/youpin/iHateYou.cda","201707031722","youpin_kdwh_srm","select non empty[operator.operator].[operator_key].members on 1,[Measures].[action_numbers] on 0 from [youpin_kdwh_expense]")));
+//        System.out.println(JsonUtil.toJson(pentahoclient.doQuery("home/youpin/iLoveYou.cda","201707031712","youpin_kdwh_srm",
+//            "select [measures].[action_numbers] on 0,non empty[expense.expense].[expense_id].members on 1 from [youpin_kdwh_expense]")));
+
 //        System.out.println(JsonUtil.toJson(pentahoclient.doQuery("home/youpin/iLoveYou.cda","liuchen Beatiful?")));
+
+//        pentahoclient.clearCache();
+//        System.out.println(JsonUtil.toJson(pentahoclient.listQueries("home/youpin/iLoveYou.cda")));
+//        System.out.println(JsonUtil.toJson(pentahoclient.getCdaList()));
+//        System.out.println(pentahoclient.listDataAccessTypes());
+        System.out.println(pentahoclient.listParameters("home/youpin/iLoveYou.cda","201707031712"));
     }
 
     /**

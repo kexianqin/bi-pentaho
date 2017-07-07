@@ -387,4 +387,37 @@ public interface IPentahoClient {
      *  dataAccessId 如果存在,则新建查询会覆盖原有查询(之前的会被删除);如果不存在,则新建名字为dataAccessId的查询.
      */
     QueryResult doQuery(String path,String dataAccessId,String catalogId,String mdx) throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/cda/api/clearCache
+     * get功能:清楚缓存
+     */
+    void clearCache () throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/cda/api/getCdaList
+     * get功能:显示用作MDX查询的所有CDA文件
+     */
+    QueryResult getCdaList () throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/cda/api/listQueries?path={path }
+     * get功能:列出指定文件中的所有查询.
+     * @param path 以/隔开的包含文件的完整路径 eg:home/youpin/iLoveYou.cda
+     */
+    QueryResult listQueries (String path) throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/cda/api/listDataAccessTypes
+     * get功能: Returns a JSON formatted list with all supported data access types and connections and their definitions.
+     */
+    String listDataAccessTypes()throws IOException;
+
+    /**
+     * http://192.168.1.124:9090/pentaho/plugin/cda/api/listParameters?path={path }&dataAccessId={dataAccessId }
+     * get功能: Returns a list of parameters used by a data access. Requires both the path and dataAccessId to be specified.
+     * @param path 以/隔开的包含文件的完整路径 eg:home/youpin/iLoveYou.cda
+     * @param dataAccessId 查询的Id
+     */
+    QueryResult listParameters (String path,String dataAccessId) throws IOException;
 }
